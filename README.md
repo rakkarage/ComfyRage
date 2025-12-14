@@ -1,8 +1,6 @@
 # ComfyRage
 
-**Install:** clone into `ComfyUI/custom_nodes`. 
-
-**Example Usage:**
+## Example
 
 ![Screenshot](screenshot.png)
 
@@ -10,7 +8,13 @@
 {dog, {leash|}|cat|horse}, [simple_background] // Pre strips comments, expands random, and expands de-emphasis, Show + Debug proves it!
 ```
 
-## Pre
+## Install
+
+Clone into `ComfyUI/custom_nodes`.
+
+## Nodes
+
+### Pre
 
 ComfyUI normally only expands random prompt syntax in direct CLIP text inputs. When text is routed into multiple encoders (e.g., SDXL’s dual prompts) or through subgraphs, random syntax is **not expanded**.
 
@@ -24,7 +28,7 @@ The **Pre** node expands it once so the final text can be reliably viewed and re
 
 You can combine **Pre** with **Show** or **Debug** to inspect the output, or pass the expanded text directly to an encoder.
 
-## Show
+### Show
 
 ComfyUI does not include a way to display text in workflow.
 
@@ -32,7 +36,7 @@ ComfyUI does not include a way to display text in workflow.
 
 - Shows text, optionally passes on input as output.
 
-## Debug
+### Debug
 
 ComfyUI does not include a way to see prompt weights.
 
