@@ -1,8 +1,8 @@
 # ComfyRage
 
-ComfyUI only expands random prompt syntax in direct CLIP text inputs. When the same text is routed into multiple encoders (such as SDXL’s dual prompts) or through subgraphs, the random syntax is left unexpanded. This node pre-expands it once so the final text can be viewed and reused reliably.
+**Install:** clone into `ComfyUI/custom_nodes`. 
 
-Install: clone into `ComfyUI/custom_nodes`. 
+**Example Usage:**
 
 ![Screenshot](screenshot.png)
 
@@ -12,18 +12,30 @@ Install: clone into `ComfyUI/custom_nodes`.
 
 ## Pre
 
-- Strips comments /* // */: `/* comment1 */ tag1, tag2, // comment2`
-- Expands random {|}: `{tag1|tag2|tag3, {tag4|}}`
-- Expands de-emphasis []: `[more[less]]`
+ComfyUI normally only expands random prompt syntax in direct CLIP text inputs. When text is routed into multiple encoders (e.g., SDXL’s dual prompts) or through subgraphs, random syntax is **not expanded**.
 
-Can use show or debug if you wanna see, or just pass to encoder.
+The **Pre** node expands it once so the final text can be reliably viewed and reused.
+
+**Features:**
+
+- **Strip comments:** /* // */: `/* comment1 */ tag1, tag2, // comment2`
+- **Expand random:** {|}: `{tag1|tag2|tag3, {tag4|}}`
+- **Expand de-emphasis:** []: `[more[less]]`
+
+You can combine **Pre** with **Show** or **Debug** to inspect the output, or pass the expanded text directly to an encoder.
 
 ## Show
+
+ComfyUI does not include a way to display text in workflow.
+
+**Features:**
 
 - Shows text, optionally passes on input as output.
 
 ## Debug
 
-- Show weights, optionally passes on input as output.
+ComfyUI does not include a way to see prompt weights.
 
-Thanks!
+**Features:**
+
+- Show weights, optionally passes on input as output.
