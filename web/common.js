@@ -101,7 +101,7 @@ export class ComfyRageCommon {
         });
     }
 
-    static saveTextToState(node, text, result) {
+    static saveTextToState(_node, text, result) {
         if (!result.widgets_values) {
             result.widgets_values = [];
         }
@@ -109,7 +109,7 @@ export class ComfyRageCommon {
         return result;
     }
 
-    static getTextFromState(node, data) {
+    static getTextFromState(_node, data) {
         return data?.widgets_values?.[0] || "";
     }
 
