@@ -19,7 +19,4 @@ NODE_DISPLAY_NAME_MAPPINGS.update(pre_display_map)
 
 WEB_DIRECTORY = os.path.join(os.path.dirname(__file__), "web")
 
-print(f"[ComfyRage] Loaded {len(NODE_CLASS_MAPPINGS)} nodes")
-print(f"[ComfyRage] Web directory: {WEB_DIRECTORY}")
-
 __all__ = ['NODE_CLASS_MAPPINGS', 'NODE_DISPLAY_NAME_MAPPINGS', 'WEB_DIRECTORY']

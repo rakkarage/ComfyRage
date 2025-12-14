@@ -7,7 +7,7 @@ export class ComfyRageCommon {
     static createDisplayExtension(nodeName) {
         return {
             name: `ComfyRage.${nodeName}.Display`,
-            async beforeRegisterNodeDef(nodeType, nodeData, app) {
+            async beforeRegisterNodeDef(nodeType, nodeData) {
                 if (nodeData.name === nodeName) {
                     const { createOutputWidget, resizeNode, getTextFromState, saveTextToState } = ComfyRageCommon;
 
