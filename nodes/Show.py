@@ -17,7 +17,7 @@ class Show:
     OUTPUT_NODE = True
 
     def show_text(self, string):
-        return {"ui": {"string": [string]}, "result": (string,)}
+        return {"ui": {"text": [string]}, "result": (string,)}
 
 NODE_CLASS_MAPPINGS = {"Show": Show}
 NODE_DISPLAY_NAME_MAPPINGS = {"Show": "⚙️Show"}

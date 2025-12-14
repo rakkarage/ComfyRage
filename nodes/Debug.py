@@ -23,7 +23,7 @@ class Debug:
         except Exception as e:
             parsed_text = f"Parse error: {str(e)}"
 
-        return {"ui": {"string": [parsed_text]}, "result": (string,)}
+        return {"ui": {"text": [parsed_text]}, "result": (string,)}
 
     def format_output(self, weights):
         if not weights:

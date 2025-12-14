@@ -42,7 +42,7 @@ export class ComfyRageCommon {
 
                     nodeType.prototype.onExecuted = function (message) {
                         onExecuted?.apply(this, arguments);
-                        const text = message?.string?.[0] ?? "";  // BOTH use 'string'
+                        const text = message?.text?.[0] ?? "";
                         currentText = text;
                         if (displayWidget) {
                             displayWidget.value = text;
