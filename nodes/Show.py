@@ -1,7 +1,5 @@
 # ComfyUI/custom_nodes/ComfyRage/nodes/Show.py
 
-import os
-
 class Show:
     @classmethod
     def INPUT_TYPES(cls):
