@@ -1,6 +1,6 @@
 # ComfyRage
 
-Install: clone into custom_nodes. 
+Install: clone into `ComfyUI/custom_nodes`. 
 
 ![Screenshot](screenshot.png)
 
