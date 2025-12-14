@@ -1,4 +1,4 @@
-// ComfyUI/custom_nodes/ComfyRage/nodes/web/index.js
+// ComfyUI/custom_nodes/ComfyRage/web/index.js
 
 import "./show.js";
 import "./debug.js";

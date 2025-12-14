@@ -1,14 +1,14 @@
-// ComfyUI/custom_nodes/ComfyRage/nodes/web/show.js
+// ComfyUI/custom_nodes/ComfyRage/web/show.js
 
 import { app } from "../../scripts/app.js";
-import { ComfyRageCommon } from "./Common.js";
+import { ComfyRageCommon } from "./common.js";
 
 app.registerExtension({
-    name: "ComfyRage.Debug",
+    name: "ComfyRage.Show",
 
     async beforeRegisterNodeDef(nodeType, nodeData, app) {
-        if (nodeData.name === "Debug") {
-            ComfyRageCommon.log("Debug", "Setting up UI");
+        if (nodeData.name === "Show") {
+            ComfyRageCommon.log("Show", "Setting up UI");
 
             // Store original methods
             const onNodeCreated = nodeType.prototype.onNodeCreated;
@@ -23,7 +23,7 @@ app.registerExtension({
 
             // Function to create/update the widget using Common.js
             function createWidget(text = "") {
-                ComfyRageCommon.log("Debug", `createWidget() with: "${text.substring(0, 50)}${text.length > 50 ? '...' : ''}"`);
+                ComfyRageCommon.log("Show", `createWidget() with: "${text.substring(0, 50)}${text.length > 50 ? '...' : ''}"`);
 
                 // Create widget using shared utility
                 displayWidget = ComfyRageCommon.createOutputWidget(this, text, {
@@ -42,11 +42,11 @@ app.registerExtension({
 
             // 1. OVERRIDE configure() - This receives the saved data
             nodeType.prototype.configure = function (data) {
-                ComfyRageCommon.log("Debug", `configure() called with data:`, data);
+                ComfyRageCommon.log("Show", `configure() called with data:`, data);
 
                 // Store saved text using shared utility
                 currentText = ComfyRageCommon.getTextFromState(this, data);
-                ComfyRageCommon.log("Debug", `Saved text found in configure(): "${currentText.substring(0, 50)}${currentText.length > 50 ? '...' : ''}"`);
+                ComfyRageCommon.log("Show", `Saved text found in configure(): "${currentText.substring(0, 50)}${currentText.length > 50 ? '...' : ''}"`);
 
                 // Call original configure
                 const ret = configure?.apply(this, arguments);
@@ -58,7 +58,7 @@ app.registerExtension({
             nodeType.prototype.onNodeCreated = function () {
                 const ret = onNodeCreated?.apply(this, arguments);
 
-                ComfyRageCommon.log("Debug", `onNodeCreated - currentText: "${currentText.substring(0, 50)}${currentText.length > 50 ? '...' : ''}"`);
+                ComfyRageCommon.log("Show", `onNodeCreated - currentText: "${currentText.substring(0, 50)}${currentText.length > 50 ? '...' : ''}"`);
 
                 // Create widget with currentText (empty or saved)
                 createWidget.call(this, currentText);
@@ -70,12 +70,12 @@ app.registerExtension({
             nodeType.prototype.onConfigure = function () {
                 const ret = onConfigure?.apply(this, arguments);
 
-                ComfyRageCommon.log("Debug", `onConfigure - widgets_values:`, this.widgets_values);
-                ComfyRageCommon.log("Debug", `onConfigure - currentText: "${currentText}"`);
+                ComfyRageCommon.log("Show", `onConfigure - widgets_values:`, this.widgets_values);
+                ComfyRageCommon.log("Show", `onConfigure - currentText: "${currentText}"`);
 
                 // Update widget with saved text if we have it
                 if (currentText && displayWidget) {
-                    ComfyRageCommon.log("Debug", `Updating widget with saved text: "${currentText.substring(0, 50)}${currentText.length > 50 ? '...' : ''}"`);
+                    ComfyRageCommon.log("Show", `Updating widget with saved text: "${currentText.substring(0, 50)}${currentText.length > 50 ? '...' : ''}"`);
                     displayWidget.value = currentText;
                 }
 
@@ -105,12 +105,12 @@ app.registerExtension({
 
                 // Save current text using shared utility
                 const savedResult = ComfyRageCommon.saveTextToState(this, currentText, result);
-                ComfyRageCommon.log("Debug", `serialize() saving: "${currentText.substring(0, 50)}${currentText.length > 50 ? '...' : ''}"`);
+                ComfyRageCommon.log("Show", `serialize() saving: "${currentText.substring(0, 50)}${currentText.length > 50 ? '...' : ''}"`);
 
                 return savedResult;
             };
 
-            ComfyRageCommon.log("Debug", "Extension registered");
+            ComfyRageCommon.log("Show", "Extension registered");
         }
     }
 });

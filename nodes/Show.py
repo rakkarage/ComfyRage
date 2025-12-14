@@ -1,4 +1,4 @@
-# ComfyUI/custom_nodes/ComfyRage/Show/__init__.py
+# ComfyUI/custom_nodes/ComfyRage/nodes/Show.py
 
 import os
 
@@ -21,5 +21,3 @@ class Show:
 
 NODE_CLASS_MAPPINGS = {"Show": Show}
 NODE_DISPLAY_NAME_MAPPINGS = {"Show": "⚙️Show"}
-
-WEB_DIRECTORY = os.path.join(os.path.dirname(__file__), "web")

@@ -1,4 +1,4 @@
-# ComfyUI/custom_nodes/ComfyRage/Pre.py
+# ComfyUI/custom_nodes/ComfyRage/nodes/Pre.py
 
 # ComfyUI only expands random variables that are in the actual clip text field, so if you pass the text into a subgraph that has random variables,
 # it will not expand them. This node fixes that. You can also pass the putput to a show any/text node to display the expanded text.

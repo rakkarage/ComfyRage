@@ -1,4 +1,4 @@
-# ComfyUI/custom_nodes/ComfyRage/Debug.py
+# ComfyUI/custom_nodes/ComfyRage/nodes/Debug.py
 
 import comfy.sd1_clip as sd1_clip
 
@@ -7,23 +7,23 @@ class Debug:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "text": ("STRING", {"multiline": True, "default": ""}),
+                "string": ("STRING", {"multiline": True, "forceInput": True, "default": "(((A)B)C), [D]"}),
             }
         }
 
-    RETURN_TYPES = ("STRING", "STRING")
-    RETURN_NAMES = ("original", "parsed")
+    RETURN_TYPES = ("STRING",)
     FUNCTION = "parse"
     CATEGORY = "utils"
+    OUTPUT_NODE = True
 
-    def parse(self, text):
+    def parse(self, string):
         try:
-            weights = sd1_clip.token_weights(text, 1.0)
+            weights = sd1_clip.token_weights(string, 1.0)
             parsed_text = self.format_output(weights)
         except Exception as e:
             parsed_text = f"Parse error: {str(e)}"
 
-        return (text, parsed_text)
+        return {"ui": {"string": [parsed_text]}, "result": (string,)}
 
     def format_output(self, weights):
         if not weights:
