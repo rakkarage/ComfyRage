@@ -3,8 +3,8 @@
 import random, re
 
 class Pre:
-    @classmethod
-    def INPUT_TYPES(cls):
+    @staticmethod
+    def INPUT_TYPES():
         return {
             "required":{
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),

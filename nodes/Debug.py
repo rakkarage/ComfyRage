@@ -3,8 +3,8 @@
 import comfy.sd1_clip as sd1_clip
 
 class Debug:
-    @classmethod
-    def INPUT_TYPES(cls):
+    @staticmethod
+    def INPUT_TYPES():
         return {
             "required": {
                 "string": ("STRING", {"multiline": True, "forceInput": True})
@@ -33,7 +33,7 @@ class Debug:
         for i, item in enumerate(weights):
             if isinstance(item, tuple):
                 token, weight = item
-                weight_str = f"{weight:.2f}" if isinstance(weight, float) else str(weight)
+                weight_str = f"{float(weight):.2f}"
                 lines.append(f"{i:2d}. '{token}' (weight: {weight_str})")
             else:
                 lines.append(f"{i:2d}. '{item}' (weight: 1.00)")

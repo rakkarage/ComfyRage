@@ -1,8 +1,8 @@
 # ComfyUI/custom_nodes/ComfyRage/nodes/Show.py
 
 class Show:
-    @classmethod
-    def INPUT_TYPES(cls):
+    @staticmethod
+    def INPUT_TYPES():
         return {
             "required": {
                 "string": ("STRING", {"multiline": True, "forceInput": True})
