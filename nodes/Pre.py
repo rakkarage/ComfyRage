@@ -142,10 +142,10 @@ class Pre:
         return ''.join(result)
 
     def process(self, seed, string):
-        cleaned = self.remove_comments(string)
-        expanded = self.expand_random(seed, cleaned)
-        cleanup = self.cleanup(expanded)
-        final = self.apply_deemphasis(cleanup)
+        stripped = self.remove_comments(string)
+        expanded = self.expand_random(seed, stripped)
+        cleaned = self.cleanup(expanded)
+        final = self.apply_deemphasis(cleaned)
 
         return (final,)
 
