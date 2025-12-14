@@ -38,7 +38,7 @@ The **Show** node lets you **inspect the text** at any point, without modifying 
 
 **Features:**
 
-- Shows text, optionally passes on input as output.
+- Show text, optionally passes on input as output.
 
 ---
 
