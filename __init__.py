@@ -16,16 +16,9 @@ NODE_CLASS_MAPPINGS.update(debug_map)
 from .nodes.Pre import NODE_CLASS_MAPPINGS as pre_map
 NODE_CLASS_MAPPINGS.update(pre_map)
 
-# Get WEB_DIRECTORY from Show (or whichever node has it)
-try:
-    from .nodes.Show import WEB_DIRECTORY
-except ImportError:
-    # Fallback: Construct path to nodes/web
-    WEB_DIRECTORY = os.path.join(os.path.dirname(__file__), "nodes", "web")
+WEB_DIRECTORY = os.path.join(os.path.dirname(__file__), "web")
 
 print(f"[ComfyRage] Loaded {len(NODE_CLASS_MAPPINGS)} nodes")
 print(f"[ComfyRage] Web directory: {WEB_DIRECTORY}")
-
-WEB_DIRECTORY = os.path.join(os.path.dirname(__file__), "web")
 
 __all__ = ['NODE_CLASS_MAPPINGS', 'NODE_DISPLAY_NAME_MAPPINGS', 'WEB_DIRECTORY']
