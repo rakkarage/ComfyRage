@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ComfyRage"
+version = "1.0.0"
+description = "Pre (comments/random/de-emphasis), Show (Text), Debug (Show Weights)"
+readme = "README.md"
+license = {file = "UNLICENSE"}
+authors = [{name = "Rakka Rage", email = "rakkarage@gmail.com"}]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+requires-python = ">=3.9"
+dependencies = [
+    # Add your dependencies here
+]
+
+[project.urls]
+"Homepage" = "https://github.com/rakkarage/ComfyRage"
+
+[tool.setuptools]
+packages = ["ComfyRage", "ComfyRage.Show"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+"ComfyRage.Show.web" = ["*.js", "*.css", "*.html"]
