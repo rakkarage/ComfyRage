@@ -1,12 +1,5 @@
 # ComfyUI/custom_nodes/ComfyRage/nodes/Pre.py
 
-# ComfyUI only expands random variables that are in the actual clip text field, so if you pass the text into a subgraph that has random variables,
-# it will not expand them. This node fixes that. You can also pass the putput to a show any/text node to display the expanded text.
-
-# also remove c styles comments: `// line` and `/*block*/`
-
-# also expands de-emphasis `[tag]` to `(tag:0.9)`
-
 import random, re
 
 class Pre:
@@ -24,26 +17,15 @@ class Pre:
     CATEGORY = "text"
 
     def remove_comments(self, text):
-        def replacer(match):
-            s = match.group(0)
-            if s.startswith('/'):
-                return ""
-            else:
-                return s
-        pattern = re.compile(r'//.*?$|/\*.*?\*/|\'(?:\\.|[^\\\'])*\'|"(?:\\.|[^\\"])*"', re.DOTALL | re.MULTILINE)
-        return re.sub(pattern, replacer, text)
+        return re.sub(r'/\*.*?\*/|//.*$', '', text, flags=re.DOTALL | re.MULTILINE)
 
     def expand_random(self, seed, text):
         random.seed(seed)
-
-        # Remove comments before expanding
-        cleaned_text = self.remove_comments(text)
 
         if text.count('{') != text.count('}'):
             raise ValueError("Unbalanced { } in input text")
 
         def find_brace_block(s):
-            """Finds the next balanced { ... } block, even multiline and nested."""
             start = s.find('{')
             if start == -1:
                 return None
@@ -59,7 +41,7 @@ class Pre:
 
             return None  # unbalanced
 
-        # Expand blocks until none left
+        # Expand blocks from innermost → outermost until none left
         while True:
             block = find_brace_block(text)
             if not block:
@@ -68,7 +50,7 @@ class Pre:
             start, end = block
             inner = text[start+1:end]
 
-            # Split by top-level |
+            # Split by top-level | (only at depth 0)
             parts = []
             buf = ""
             depth = 0
@@ -87,9 +69,11 @@ class Pre:
             parts.append(buf.strip())
 
             choice = random.choice(parts) if parts else ""
-
             text = text[:start] + choice + text[end+1:]
 
+        return text
+
+    def cleanup(self, text):
         cleaned_lines = []
         for line in text.splitlines():
             line = line.strip()
@@ -101,16 +85,12 @@ class Pre:
             while ',,' in line or ', ,' in line:
                 line = re.sub(r',\s*,', ',', line)
 
-            # NEW: remove commas before a closing parenthesis
+            # remove commas before closing brackets/parens
             line = re.sub(r',\s*\)', ')', line)
-
-            # NEW: remove commas before a closing bracket
             line = re.sub(r',\s*\]', ']', line)
 
-            # remove empty item at start of bracketed list: "[, foo]" → "[foo]"
+            # remove empty item at start of brackets/parens
             line = re.sub(r'\[\s*,\s*', '[', line)
-
-            # remove empty item at start of parenthesized list: "(, foo)" → "(foo)"
             line = re.sub(r'\(\s*,\s*', '(', line)
 
             # remove leading commas/spaces
@@ -128,41 +108,45 @@ class Pre:
         return '\n'.join(cleaned_lines)
 
     def apply_deemphasis(self, text):
-        # Common-sense mirror of () emphasis: 
-        # ( ) depth N → 1.1^N
-        # [ ] depth N → 0.9^N
+        result = []
+        i = 0
+        while i < len(text):
+            if text[i] == '[':
+                # Find matching closing bracket
+                depth = 1
+                j = i + 1
+                while j < len(text) and depth > 0:
+                    if text[j] == '[':
+                        depth += 1
+                    elif text[j] == ']':
+                        depth -= 1
+                    j += 1
 
-        def replace_brackets(match):
-            inner = match.group(1).strip()
-            brackets = match.group(0)
+                if depth == 0:
+                    # Extract inner content (between [ and ])
+                    inner = text[i+1:j-1].strip()
+                    # Count nesting: how many unmatched [ are before this position
+                    nesting_depth = text[:i].count('[') - text[:i].count(']')
 
-            # count nesting depth: number of '[' at start
-            depth = 0
-            for c in brackets:
-                if c == '[':
-                    depth += 1
+                    weight = 0.9 ** (nesting_depth + 1)
+                    weight_str = str(weight).rstrip("0").rstrip(".")
+                    result.append(f"({inner}:{weight_str})")
+                    i = j
                 else:
-                    break
+                    result.append(text[i])
+                    i += 1
+            else:
+                result.append(text[i])
+                i += 1
 
-            weight = 0.9 ** depth
-            w = str(weight).rstrip("0").rstrip(".")
-            return f"({inner}:{w})"
-
-        out = text
-
-        # repeatedly process nested brackets from inside → out
-        while True:
-            new = re.sub(r'\[([^\[\]]+)\]', replace_brackets, out)
-            if new == out:
-                break
-            out = new
-
-        return out
+        return ''.join(result)
 
     def process(self, seed, text):
         cleaned = self.remove_comments(text)
         expanded = self.expand_random(seed, cleaned)
-        final = self.apply_deemphasis(expanded)
+        cleanup = self.cleanup(expanded)
+        final = self.apply_deemphasis(cleanup)
+
         return (final,)
 
 NODE_CLASS_MAPPINGS = { "Pre": Pre }
