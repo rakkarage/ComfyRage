@@ -2,5 +2,3 @@
 
 import "./show.js";
 import "./debug.js";
-
-console.log("✅ ComfyRage web components loaded");
