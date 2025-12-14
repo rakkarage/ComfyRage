@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "ComfyRage"
 version = "1.0.0"
-description = "Pre (comments/random/de-emphasis), Show (Text), Debug (Show Weights)"
+description = "Pre (pre-process comments/random/de-emphasis), Show (text), Debug (weights)"
 readme = "README.md"
 license = {file = "UNLICENSE"}
 authors = [{name = "Rakka Rage", email = "rakkarage@gmail.com"}]
