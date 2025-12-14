@@ -8,7 +8,7 @@ class Pre:
         return {
             "required":{
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
-                "text": ("STRING", {"multiline": True, "default": "{dog, {leash|}|cat|horse}, [simple_background] // Pre strips comments, expands random, and expands de-emphasis, Show + Debug proves it!"})
+                "string": ("STRING", {"multiline": True, "default": "{dog, {leash|}|cat|horse}, [simple_background] // Pre strips comments, expands random, and expands de-emphasis, Show + Debug proves it!"})
             }
         }
 
@@ -16,14 +16,14 @@ class Pre:
     FUNCTION = "process"
     CATEGORY = "text"
 
-    def remove_comments(self, text):
-        return re.sub(r'/\*.*?\*/|//.*$', '', text, flags=re.DOTALL | re.MULTILINE)
+    def remove_comments(self, string):
+        return re.sub(r'/\*.*?\*/|//.*$', '', string, flags=re.DOTALL | re.MULTILINE)
 
-    def expand_random(self, seed, text):
+    def expand_random(self, seed, string):
         random.seed(seed)
 
-        if text.count('{') != text.count('}'):
-            raise ValueError("Unbalanced { } in input text")
+        if string.count('{') != string.count('}'):
+            raise ValueError("Unbalanced { } in input string")
 
         def find_brace_block(s):
             start = s.find('{')
@@ -43,12 +43,12 @@ class Pre:
 
         # Expand blocks from innermost → outermost until none left
         while True:
-            block = find_brace_block(text)
+            block = find_brace_block(string)
             if not block:
                 break
 
             start, end = block
-            inner = text[start+1:end]
+            inner = string[start+1:end]
 
             # Split by top-level | (only at depth 0)
             parts = []
@@ -69,13 +69,13 @@ class Pre:
             parts.append(buf.strip())
 
             choice = random.choice(parts) if parts else ""
-            text = text[:start] + choice + text[end+1:]
+            string = string[:start] + choice + string[end+1:]
 
-        return text
+        return string
 
-    def cleanup(self, text):
+    def cleanup(self, string):
         cleaned_lines = []
-        for line in text.splitlines():
+        for line in string.splitlines():
             line = line.strip()
 
             # collapse repeated commas
@@ -107,42 +107,42 @@ class Pre:
 
         return '\n'.join(cleaned_lines)
 
-    def apply_deemphasis(self, text):
+    def apply_deemphasis(self, string):
         result = []
         i = 0
-        while i < len(text):
-            if text[i] == '[':
+        while i < len(string):
+            if string[i] == '[':
                 # Find matching closing bracket
                 depth = 1
                 j = i + 1
-                while j < len(text) and depth > 0:
-                    if text[j] == '[':
+                while j < len(string) and depth > 0:
+                    if string[j] == '[':
                         depth += 1
-                    elif text[j] == ']':
+                    elif string[j] == ']':
                         depth -= 1
                     j += 1
 
                 if depth == 0:
                     # Extract inner content (between [ and ])
-                    inner = text[i+1:j-1].strip()
+                    inner = string[i+1:j-1].strip()
                     # Count nesting: how many unmatched [ are before this position
-                    nesting_depth = text[:i].count('[') - text[:i].count(']')
+                    nesting_depth = string[:i].count('[') - string[:i].count(']')
 
                     weight = 0.9 ** (nesting_depth + 1)
                     weight_str = str(weight).rstrip("0").rstrip(".")
                     result.append(f"({inner}:{weight_str})")
                     i = j
                 else:
-                    result.append(text[i])
+                    result.append(string[i])
                     i += 1
             else:
-                result.append(text[i])
+                result.append(string[i])
                 i += 1
 
         return ''.join(result)
 
-    def process(self, seed, text):
-        cleaned = self.remove_comments(text)
+    def process(self, seed, string):
+        cleaned = self.remove_comments(string)
         expanded = self.expand_random(seed, cleaned)
         cleanup = self.cleanup(expanded)
         final = self.apply_deemphasis(cleanup)
