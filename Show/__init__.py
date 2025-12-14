@@ -1,5 +1,7 @@
 # ComfyUI/custom_nodes/ComfyRage/Show/__init__.py
 
+import os
+
 class Show:
     @classmethod
     def INPUT_TYPES(cls):
@@ -20,4 +22,4 @@ class Show:
 NODE_CLASS_MAPPINGS = {"Show": Show}
 NODE_DISPLAY_NAME_MAPPINGS = {"Show": "⚙️Show"}
 
-WEB_DIRECTORY = "web"
+WEB_DIRECTORY = os.path.join(os.path.dirname(__file__), "web")
