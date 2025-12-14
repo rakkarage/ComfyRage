@@ -21,7 +21,7 @@ class Pre:
 
     RETURN_TYPES = ("STRING",)
     FUNCTION = "process"
-    CATEGORY = "Text"
+    CATEGORY = "text"
 
     def remove_comments(self, text):
         def replacer(match):

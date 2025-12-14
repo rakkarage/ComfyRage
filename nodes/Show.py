@@ -13,7 +13,7 @@ class Show:
 
     RETURN_TYPES = ("STRING",)
     FUNCTION = "show_text"
-    CATEGORY = "Debug"
+    CATEGORY = "text"
     OUTPUT_NODE = True
 
     def show_text(self, string):

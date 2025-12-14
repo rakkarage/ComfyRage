@@ -7,13 +7,13 @@ class Debug:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "string": ("STRING", {"multiline": True, "forceInput": True, "default": "(((A)B)C), [D]"}),
+                "string": ("STRING", {"multiline": True, "forceInput": True})
             }
         }
 
     RETURN_TYPES = ("STRING",)
     FUNCTION = "parse"
-    CATEGORY = "utils"
+    CATEGORY = "text"
     OUTPUT_NODE = True
 
     def parse(self, string):

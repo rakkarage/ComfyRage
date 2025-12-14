@@ -1,18 +1,22 @@
 # ComfyRage
 
+![Screenshot](screenshot.png)
+
 ```
 {dog, {leash|}|cat|horse}, [simple_background] // Pre strips comments, expands random, and expands de-emphasis, Show + Debug proves it!
 ```
 
 # Pre
-- strips comments
-- expands random {tag1|tag2|etc}, {tag4|}
-- expands de-emphasis
+- Strips comments: `/* comment1 */ tag1, tag2, // comment2`
+- Expands random: `{tag1|tag2|etc}, {tag4|}`
+- Expands de-emphasis: `[less[less]]`
+
+Can use show or debug if you wanna see, or just pass to encoder.
 
 # Show
-- shows text
+- Shows text, optionally passes on input as output.
 
 # Debug
-- passes prompt through ComfyUI to get the weights, pass to Show to see them (gonna make it show on self after refactor)
+- Show weights, optionally passes on input as output.
 
 Thanks!
