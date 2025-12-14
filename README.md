@@ -10,9 +10,9 @@ Install: clone into custom_nodes.
 
 ## Pre
 
-- Strips comments: `/* comment1 */ tag1, tag2, // comment2`
-- Expands random: `{tag1|tag2|etc}, {tag4|}`
-- Expands de-emphasis: `[less[less]]`
+- Strips comments /* // */: `/* comment1 */ tag1, tag2, // comment2`
+- Expands random {|}: `{tag1|tag2|tag3, {tag4|}}`
+- Expands de-emphasis []: `[more[less]]`
 
 Can use show or debug if you wanna see, or just pass to encoder.
 
