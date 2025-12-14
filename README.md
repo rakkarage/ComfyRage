@@ -16,9 +16,11 @@ Clone into `ComfyUI/custom_nodes`.
 
 ### Pre
 
-ComfyUI normally only expands random prompt syntax in direct CLIP text inputs. When text is routed into multiple encoders (e.g., SDXL’s dual prompts) or through subgraphs, random syntax is **not expanded**.
+ComfyUI only expands random prompt syntax if it’s written directly in a CLIP text input. Text coming from multiple encoders (e.g., SDXL’s dual prompts) or subgraphs is **not expanded**.
 
-The **Pre** node expands it once so the final text can be reliably viewed and reused.
+The **Pre** node expands it once so the final text can be reliably viewed, reused, and passed consistently to downstream nodes.
+
+You can combine **Pre** with **Show** or **Debug** to inspect the output, or pass the expanded text directly to an encoder.
 
 **Features:**
 
@@ -26,19 +28,25 @@ The **Pre** node expands it once so the final text can be reliably viewed and re
 - **Expand random:** {|}: `{tag1|tag2|tag3, {tag4|}}`
 - **Expand de-emphasis:** []: `[more[less]]`
 
-You can combine **Pre** with **Show** or **Debug** to inspect the output, or pass the expanded text directly to an encoder.
+---
 
 ### Show
 
-ComfyUI does not include a way to display text in workflow.
+ComfyUI does not provide a built-in way to display the text as it flows through a workflow.
+
+The **Show** node lets you **inspect the text** at any point, without modifying it, which is useful for debugging or verifying prompts.
 
 **Features:**
 
 - Shows text, optionally passes on input as output.
 
+---
+
 ### Debug
 
-ComfyUI does not include a way to see prompt weights.
+ComfyUI does not provide a way to visualize weights, such as de-emphasis or nested weighting.
+
+The **Debug** node lets you **inspect prompt weights** helping you understand how the final prompt will be interpreted by the encoder.
 
 **Features:**
 
