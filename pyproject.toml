@@ -10,6 +10,7 @@ readme = "README.md"
 license = {file = "UNLICENSE"}
 authors = [{name = "Rakka Rage", email = "rakkarage@gmail.com"}]
 classifiers = [
+    "License :: Public Domain",
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
 ]
