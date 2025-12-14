@@ -15,7 +15,7 @@ class Pre:
         return {
             "required":{
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
-                "text": ("STRING", {"multiline": True})
+                "text": ("STRING", {"multiline": True, "default": "{dog, {leash|}|cat|horse}, [simple_background] // Pre handles weights, de-emphasis, and comments, and show + debug proves it"})
             }
         }
 
