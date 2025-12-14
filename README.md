@@ -14,7 +14,7 @@ Clone into `ComfyUI/custom_nodes`.
 
 ## Nodes
 
-### Pre
+### ⚙️Pre
 
 ComfyUI only expands random prompt syntax if it’s written directly in a CLIP text input. Text coming from multiple encoders (e.g., SDXL’s dual prompts) or subgraphs is **not expanded**.
 
@@ -30,7 +30,7 @@ You can combine **Pre** with **Show** or **Debug** to inspect the output, or pas
 
 ---
 
-### Show
+### ⚙️Show
 
 ComfyUI does not provide a built-in way to display the text as it flows through a workflow.
 
@@ -42,7 +42,7 @@ The **Show** node lets you **inspect the text** at any point, without modifying 
 
 ---
 
-### Debug
+### ⚙️Debug
 
 ComfyUI does not provide a way to visualize weights, such as de-emphasis or nested weighting.
 
