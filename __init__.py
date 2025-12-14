@@ -1,12 +1,10 @@
-"""
-ComfyUI/custom_nodes/ComfyRage/__init__.py
-"""
+# ComfyUI/custom_nodes/ComfyRage/__init__.py
+
 import os
 
 NODE_CLASS_MAPPINGS = {}
 NODE_DISPLAY_NAME_MAPPINGS = {}
 
-# Import from nodes/ subdirectory
 from .nodes.Show import NODE_CLASS_MAPPINGS as show_map, NODE_DISPLAY_NAME_MAPPINGS as show_display_map
 NODE_CLASS_MAPPINGS.update(show_map)
 NODE_DISPLAY_NAME_MAPPINGS.update(show_display_map)

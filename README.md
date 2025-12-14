@@ -1,5 +1,7 @@
 # ComfyRage
 
+ComfyUI only expands random prompt syntax in direct CLIP text inputs. When the same text is routed into multiple encoders (such as SDXL’s dual prompts) or through subgraphs, the random syntax is left unexpanded. This node pre-expands it once so the final text can be viewed and reused reliably.
+
 Install: clone into `ComfyUI/custom_nodes`. 
 
 ![Screenshot](screenshot.png)
