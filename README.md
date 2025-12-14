@@ -1,6 +1,8 @@
 # ComfyRage
 
-{dog, {leash|}|cat|horse}, [simple_background] // Pre handles weights, de-emphasis, and comments, and show + debug proves it
+```
+{dog, {leash|}|cat|horse}, [simple_background] // Pre strips comments, expands random, and expands de-emphasis, Show + Debug proves it!
+```
 
 # Pre
 - strips comments
