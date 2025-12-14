@@ -1,4 +1,4 @@
-# ComfyUI/custom_nodes/Show/__init__.py
+# ComfyUI/custom_nodes/ComfyRage/Show/__init__.py
 
 class Show:
     @classmethod

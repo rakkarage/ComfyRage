@@ -1,56 +1,53 @@
 """
-ComfyUI Custom Nodes Aggregator
-Automatically collects nodes from Show/, Debug.py, and Pre.py
+ComfyUI/custom_nodes/ComfyRage/__init__.py
 """
 
 import os
-import sys
 
-# Add current directory to path for imports
-sys.path.insert(0, os.path.dirname(__file__))
-
-# Initialize mappings
+# Initialize
 NODE_CLASS_MAPPINGS = {}
 NODE_DISPLAY_NAME_MAPPINGS = {}
 WEB_DIRECTORY = None
 
-# List of modules to import
-modules_to_load = [
-    ("Show", "Show"),
-    ("Debug.py", "Debug"),
-    ("Pre.py", "Pre")
-]
+# 1. Load Show (package with web)
+try:
+    from .Show import (
+        NODE_CLASS_MAPPINGS as show_map,
+        NODE_DISPLAY_NAME_MAPPINGS as show_disp,
+        WEB_DIRECTORY as show_web
+    )
+    NODE_CLASS_MAPPINGS.update(show_map)
+    NODE_DISPLAY_NAME_MAPPINGS.update(show_disp)
+    WEB_DIRECTORY = show_web
+    print(f"Loaded Show: {list(show_map.keys())}")
+except ImportError as e:
+    print(f"Warning: Could not load Show: {e}")
 
-for module_path, module_name in modules_to_load:
-    try:
-        if module_name == "Show":
-            # Import package
-            from Show import (
-                NODE_CLASS_MAPPINGS as mod_mappings,
-                NODE_DISPLAY_NAME_MAPPINGS as mod_display,
-                WEB_DIRECTORY as mod_web
-            )
-            WEB_DIRECTORY = mod_web  # Show sets the web directory
-        else:
-            # Import .py file
-            if module_name == "Debug":
-                import Debug as mod
-            else:
-                import Pre as mod
-            
-            mod_mappings = mod.NODE_CLASS_MAPPINGS
-            mod_display = mod.NODE_DISPLAY_NAME_MAPPINGS
-            mod_web = getattr(mod, 'WEB_DIRECTORY', None)
-        
-        # Update mappings
-        NODE_CLASS_MAPPINGS.update(mod_mappings)
-        NODE_DISPLAY_NAME_MAPPINGS.update(mod_display)
-        
-        print(f"✓ Loaded {module_name}: {list(mod_mappings.keys())}")
-        
-    except ImportError as e:
-        print(f"✗ Failed to load {module_name}: {e}")
-    except AttributeError as e:
-        print(f"✗ {module_name} missing exports: {e}")
+# 2. Load Debug.py
+try:
+    # Use relative import
+    from .Debug import (
+        NODE_CLASS_MAPPINGS as debug_map,
+        NODE_DISPLAY_NAME_MAPPINGS as debug_disp
+    )
+    NODE_CLASS_MAPPINGS.update(debug_map)
+    NODE_DISPLAY_NAME_MAPPINGS.update(debug_disp)
+    print(f"Loaded Debug: {list(debug_map.keys())}")
+except ImportError as e:
+    print(f"Warning: Could not load Debug: {e}")
+
+# 3. Load Pre.py
+try:
+    from .Pre import (
+        NODE_CLASS_MAPPINGS as pre_map,
+        NODE_DISPLAY_NAME_MAPPINGS as pre_disp
+    )
+    NODE_CLASS_MAPPINGS.update(pre_map)
+    NODE_DISPLAY_NAME_MAPPINGS.update(pre_disp)
+    print(f"Loaded Pre: {list(pre_map.keys())}")
+except ImportError as e:
+    print(f"Warning: Could not load Pre: {e}")
+
+print(f"Total nodes registered: {len(NODE_CLASS_MAPPINGS)}")
 
 __all__ = ['NODE_CLASS_MAPPINGS', 'NODE_DISPLAY_NAME_MAPPINGS', 'WEB_DIRECTORY']

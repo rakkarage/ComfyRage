@@ -1,4 +1,4 @@
-# ComfyUI/custom_nodes/Debug.py
+# ComfyUI/custom_nodes/ComfyRage/Debug.py
 
 import comfy.sd1_clip as sd1_clip
 
