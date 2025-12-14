@@ -32,13 +32,14 @@ You can combine **Pre** with **Show** or **Debug** to inspect the output, or pas
 
 ### ⚙️Show
 
-ComfyUI does not provide a built-in way to display the text as it flows through a workflow.
+ComfyUI provides **Preview Any** to display text as it flows through a workflow, but it doesn't persist, so eventually it becomes impossible to inspect.
 
-The **Show** node lets you **inspect the text** at any point, without modifying it, which is useful for debugging or verifying prompts.
+The **Show** node lets you **inspect the text at any point**, without modifying it, which is useful for debugging or verifying prompts.
 
 **Features:**
 
-- Show text, optionally passes on input as output.
+- Display text persistently in the node for inspection.
+- Optionally pass input as output.
 
 ---
 
@@ -50,4 +51,5 @@ The **Debug** node lets you **inspect prompt weights** helping you understand ho
 
 **Features:**
 
-- Show weights, optionally passes on input as output.
+- Display weights persistently in the node for inspection.
+- Optionally pass input as output.
