@@ -5,7 +5,7 @@
 ![Screenshot](screenshot.png)
 
 ```
-{dog, {leash|}|cat|horse}, [simple_background] // Pre strips comments, expands random, and expands de-emphasis, Show + Debug proves it!
+{dog, {leash|}|cat|rabbit|horse|fox|bird}, [simple_background] // Pre strips comments, expands random, and expands de-emphasis, Show + Debug proves it!
 ```
 
 ## Install
