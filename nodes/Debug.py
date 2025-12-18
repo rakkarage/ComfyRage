@@ -23,9 +23,6 @@ class Debug:
         values = extract(kwargs)
         inject(values, unique_id, extra_pnginfo)
 
-        if not values:
-            return {"ui": {"text": []}, "result": ([],)}
-
         parsed_texts = []
         for val in values:
             weights = sd1_clip.token_weights(val, 1.0)

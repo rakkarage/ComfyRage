@@ -6,6 +6,7 @@ import random, re
 class Pre:
     @staticmethod
     def INPUT_TYPES():
+        EXAMPLE_TEXT = "(((tiger), bobcat), cat), {dog, {leash|}|rabbit|horse|fox|bird}, [simple_background] // Pre strips comments, expands random, and expands de-emphasis, Show + Debug proves it!"
         return {
             "required": {
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
@@ -13,7 +14,8 @@ class Pre:
                     "STRING",
                     {
                         "multiline": True,
-                        "default": "(((tiger), bobcat), cat), {dog, {leash|}|rabbit|horse|fox|bird}, [simple_background] // Pre strips comments, expands random, and expands de-emphasis, Show + Debug proves it!",
+                        "placeholder": EXAMPLE_TEXT,
+                        "default": EXAMPLE_TEXT,
                     },
                 ),
             }
