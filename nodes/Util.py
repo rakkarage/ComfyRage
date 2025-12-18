@@ -1,7 +1,5 @@
 # ComfyUI/custom_nodes/ComfyRage/nodes/Util.py
 
-import json
-
 def extract(kwargs):
     if "string" not in kwargs:
         return []
