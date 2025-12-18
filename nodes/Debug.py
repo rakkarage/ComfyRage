@@ -35,7 +35,7 @@ class Debug:
 
     def format_output(self, weights):
         if not weights:
-            return "Empty prompt"
+            return ""
 
         lines = []
 
