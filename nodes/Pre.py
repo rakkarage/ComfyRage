@@ -2,13 +2,20 @@
 
 import random, re
 
+
 class Pre:
     @staticmethod
     def INPUT_TYPES():
         return {
-            "required":{
-                "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
-                "string": ("STRING", {"multiline": True, "default": "(((tiger), bobcat), cat), {dog, {leash|}|rabbit|horse|fox|bird}, [simple_background] // Pre strips comments, expands random, and expands de-emphasis, Show + Debug proves it!"})
+            "required": {
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
+                "string": (
+                    "STRING",
+                    {
+                        "multiline": True,
+                        "default": "(((tiger), bobcat), cat), {dog, {leash|}|rabbit|horse|fox|bird}, [simple_background] // Pre strips comments, expands random, and expands de-emphasis, Show + Debug proves it!",
+                    },
+                ),
             }
         }
 
@@ -26,15 +33,15 @@ class Pre:
             raise ValueError("Unbalanced { } in input string")
 
         def find_brace_block(s):
-            start = s.find('{')
+            start = s.find("{")
             if start == -1:
                 return None
 
             depth = 0
             for i in range(start, len(s)):
-                if s[i] == '{':
+                if s[i] == "{":
                     depth += 1
-                elif s[i] == '}':
+                elif s[i] == "}":
                     depth -= 1
                     if depth == 0:
                         return (start, i)
@@ -53,13 +60,13 @@ class Pre:
             buf = ""
             depth = 0
             for ch in inner:
-                if ch == '{':
+                if ch == "{":
                     depth += 1
                     buf += ch
-                elif ch == '}':
+                elif ch == "}":
                     depth -= 1
                     buf += ch
-                elif ch == '|' and depth == 0:
+                elif ch == "|" and depth == 0:
                     parts.append(buf.strip())
                     buf = ""
                 else:
@@ -76,17 +83,17 @@ class Pre:
             return ""
 
         while True:
-            new_line = re.sub(r',\s*,', ',', line)
+            new_line = re.sub(r",\s*,", ",", line)
             if new_line == line:
                 break
             line = new_line
 
-        line = re.sub(r',\s*([\)\]])', r'\1', line)
-        line = re.sub(r'^\s*,', '', line)
-        line = re.sub(r'([\(\[])\s*,', r'\1', line)
+        line = re.sub(r",\s*([\)\]])", r"\1", line)
+        line = re.sub(r"^\s*,", "", line)
+        line = re.sub(r"([\(\[])\s*,", r"\1", line)
         line = line.strip()
 
-        if line == ',' or not line:
+        if line == "," or not line:
             return ""
 
         return line
@@ -100,7 +107,7 @@ class Pre:
 
             line = self.clean_commas(line)
             if line:
-                line = re.sub(r',\s*$', '', line).rstrip()
+                line = re.sub(r",\s*$", "", line).rstrip()
                 lines.append(line)
 
         if not lines:
@@ -109,10 +116,10 @@ class Pre:
         result = []
         for i, line in enumerate(lines):
             if i < len(lines) - 1 and line:
-                line = line + ','
+                line = line + ","
             result.append(line)
 
-        return '\n'.join(result)
+        return "\n".join(result)
 
     def apply_deemphasis(self, string):
         result = []
@@ -143,7 +150,7 @@ class Pre:
                 result.append(string[i])
                 i += 1
 
-        return ''.join(result)
+        return "".join(result)
 
     def run(self, seed, string):
         stripped = self.remove_comments(string)
@@ -153,5 +160,6 @@ class Pre:
 
         return (final,)
 
-NODE_CLASS_MAPPINGS = { "Pre": Pre }
-NODE_DISPLAY_NAME_MAPPINGS = { "Pre": "⚙️Pre" }
+
+NODE_CLASS_MAPPINGS = {"Pre": Pre}
+NODE_DISPLAY_NAME_MAPPINGS = {"Pre": "⚙️Pre"}

@@ -3,13 +3,14 @@
 import comfy.sd1_clip as sd1_clip
 from .Util import extract, inject
 
+
 class Debug:
     @staticmethod
     def INPUT_TYPES():
         return {
             "required": {},
             "optional": {"string": ("STRING", {})},
-            "hidden": {"unique_id": "UNIQUE_ID", "extra_pnginfo": "EXTRA_PNGINFO"}
+            "hidden": {"unique_id": "UNIQUE_ID", "extra_pnginfo": "EXTRA_PNGINFO"},
         }
 
     RETURN_TYPES = ("STRING",)
@@ -26,13 +27,12 @@ class Debug:
             parsed_text = "No input provided"
             return {"ui": {"text": [parsed_text]}, "result": ([],)}
 
-        try:
-            weights = sd1_clip.token_weights(values[0], 1.0)
-            parsed_text = self.format_output(weights)
-        except Exception as e:
-            parsed_text = f"Input parse error: {str(e)}"
+        parsed_texts = []
+        for val in values:
+            weights = sd1_clip.token_weights(val, 1.0)
+            parsed_texts.append(self.format_output(weights))
 
-        return {"ui": {"text": [parsed_text]}, "result": (values[0],)}
+        return {"ui": {"text": [parsed_text]}, "result": (values,)}
 
     def format_output(self, weights):
         if not weights:
@@ -50,5 +50,6 @@ class Debug:
 
         return "\n".join(lines)
 
-NODE_CLASS_MAPPINGS = { "Debug": Debug }
-NODE_DISPLAY_NAME_MAPPINGS = { "Debug": "⚙️Debug" }
+
+NODE_CLASS_MAPPINGS = {"Debug": Debug}
+NODE_DISPLAY_NAME_MAPPINGS = {"Debug": "⚙️Debug"}
