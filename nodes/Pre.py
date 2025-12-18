@@ -72,7 +72,6 @@ class Pre:
         return display
 
     def clean_commas(self, line):
-        """Clean comma issues within a single line."""
         if not line or line.isspace():
             return ""
 

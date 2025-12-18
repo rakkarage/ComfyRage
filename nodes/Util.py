@@ -2,33 +2,11 @@
 
 import json
 
-class AlwaysEqualProxy(str):
-    def __eq__(self, _):
-        return True
-
-    def __ne__(self, _):
-        return False
-
-any_type = AlwaysEqualProxy("*")
-
 def extract(kwargs):
-    values = []
-
-    if "anything" not in kwargs:
+    if "string" not in kwargs:
         return values
 
-    for val in kwargs["anything"]:
-        try:
-            if isinstance(val, str):
-                values.append(val)
-            elif isinstance(val, (int, float, bool)):
-                values.append(str(val))
-            else:
-                values.append(json.dumps(val, indent=4))
-        except Exception:
-            values.append(str(val))
-
-    return values
+    return [str(val) for val in kwargs["string"]]
 
 def inject(values, unique_id, extra_pnginfo):
     if not extra_pnginfo:

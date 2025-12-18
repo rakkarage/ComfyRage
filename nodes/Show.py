@@ -1,14 +1,14 @@
 # ComfyUI/custom_nodes/ComfyRage/nodes/Show.py
 
-from .Util import any_type, extract, inject
+from .Util import extract, inject
 
 class Show:
     @staticmethod
     def INPUT_TYPES():
         return {
             "required": {},
-            "optional": {"anything": (any_type, {}),},
-            "hidden": {"unique_id": "UNIQUE_ID", "extra_pnginfo": "EXTRA_PNGINFO",}
+            "optional": {"string": ("STRING", {})},
+            "hidden": {"unique_id": "UNIQUE_ID", "extra_pnginfo": "EXTRA_PNGINFO"}
         }
 
     RETURN_TYPES = ("STRING",)
