@@ -8,7 +8,7 @@ class Pre:
         return {
             "required":{
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
-                "display": ("STRING", {"multiline": True, "default": "(((tiger), bobcat), cat), {dog, {leash|}|rabbit|horse|fox|bird}, [simple_background] // Pre strips comments, expands random, and expands de-emphasis, Show + Debug proves it!"})
+                "string": ("STRING", {"multiline": True, "default": "(((tiger), bobcat), cat), {dog, {leash|}|rabbit|horse|fox|bird}, [simple_background] // Pre strips comments, expands random, and expands de-emphasis, Show + Debug proves it!"})
             }
         }
 
@@ -16,13 +16,13 @@ class Pre:
     FUNCTION = "run"
     CATEGORY = "text"
 
-    def remove_comments(self, display):
-        return re.sub(r'/\*.*?\*/|//[^\n\r]*', '', display, flags=re.DOTALL)
+    def remove_comments(self, string):
+        return re.sub(r"/\*.*?\*/|//[^\n\r]*", "", string, flags=re.DOTALL)
 
-    def expand_random(self, seed, display):
+    def expand_random(self, seed, string):
         random.seed(seed)
 
-        if display.count('{') != display.count('}'):
+        if string.count("{") != string.count("}"):
             raise ValueError("Unbalanced { } in input string")
 
         def find_brace_block(s):
@@ -42,12 +42,12 @@ class Pre:
             return None
 
         while True:
-            block = find_brace_block(display)
+            block = find_brace_block(string)
             if not block:
                 break
 
             start, end = block
-            inner = display[start+1:end]
+            inner = string[start + 1 : end]
 
             parts = []
             buf = ""
@@ -67,9 +67,9 @@ class Pre:
             parts.append(buf.strip())
 
             choice = random.choice(parts) if parts else ""
-            display = display[:start] + choice + display[end+1:]
+            string = string[:start] + choice + string[end + 1 :]
 
-        return display
+        return string
 
     def clean_commas(self, line):
         if not line or line.isspace():
@@ -91,9 +91,9 @@ class Pre:
 
         return line
 
-    def cleanup(self, display):
+    def cleanup(self, string):
         lines = []
-        for line in display.splitlines():
+        for line in string.splitlines():
             line = line.strip()
             if not line:
                 continue
@@ -114,39 +114,39 @@ class Pre:
 
         return '\n'.join(result)
 
-    def apply_deemphasis(self, display):
+    def apply_deemphasis(self, string):
         result = []
         i = 0
-        while i < len(display):
-            if display[i] == '[':
+        while i < len(string):
+            if string[i] == "[":
                 depth = 1
                 j = i + 1
-                while j < len(display) and depth > 0:
-                    if display[j] == '[':
+                while j < len(string) and depth > 0:
+                    if string[j] == "[":
                         depth += 1
-                    elif display[j] == ']':
+                    elif string[j] == "]":
                         depth -= 1
                     j += 1
 
                 if depth == 0:
-                    inner = display[i+1:j-1].strip()
-                    nesting_depth = display[:i].count('[') - display[:i].count(']')
+                    inner = string[i + 1 : j - 1].strip()
+                    nesting_depth = string[:i].count("[") - string[:i].count("]")
 
                     weight = 0.9 ** (nesting_depth + 1)
                     weight_str = str(weight).rstrip("0").rstrip(".")
                     result.append(f"({inner}:{weight_str})")
                     i = j
                 else:
-                    result.append(display[i])
+                    result.append(string[i])
                     i += 1
             else:
-                result.append(display[i])
+                result.append(string[i])
                 i += 1
 
         return ''.join(result)
 
-    def run(self, seed, display):
-        stripped = self.remove_comments(display)
+    def run(self, seed, string):
+        stripped = self.remove_comments(string)
         expanded = self.expand_random(seed, stripped)
         cleaned = self.cleanup(expanded)
         final = self.apply_deemphasis(cleaned)
