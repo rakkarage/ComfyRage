@@ -49,7 +49,7 @@ export class ComfyRageCommon {
                 nodeType.prototype.onConfigure = function () {
                     onConfigure?.apply(this, arguments);
                     if (this.widgets_values?.length) {
-                        let values = this.widgets_values[0]; // TODO: loop?
+                        let values = this.widgets_values[0];
                         populate.call(this, values, 'text');
                     }
                 };
