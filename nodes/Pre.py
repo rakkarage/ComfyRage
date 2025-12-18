@@ -8,12 +8,12 @@ class Pre:
         return {
             "required":{
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
-                "display": ("STRING", {"multiline": True, "default": "{dog, {leash|}|cat|rabbit|horse|fox|bird}, [simple_background] // Pre strips comments, expands random, and expands de-emphasis, Show + Debug proves it!"})
+                "display": ("STRING", {"multiline": True, "default": "(((tiger), bobcat), cat), {dog, {leash|}|rabbit|horse|fox|bird}, [simple_background] // Pre strips comments, expands random, and expands de-emphasis, Show + Debug proves it!"})
             }
         }
 
     RETURN_TYPES = ("STRING",)
-    FUNCTION = "process"
+    FUNCTION = "run"
     CATEGORY = "text"
 
     def remove_comments(self, display):
@@ -39,9 +39,8 @@ class Pre:
                     if depth == 0:
                         return (start, i)
 
-            return None  # unbalanced
+            return None
 
-        # Expand blocks from innermost → outermost until none left
         while True:
             block = find_brace_block(display)
             if not block:
@@ -50,7 +49,6 @@ class Pre:
             start, end = block
             inner = display[start+1:end]
 
-            # Split by top-level | (only at depth 0)
             parts = []
             buf = ""
             depth = 0
@@ -73,46 +71,55 @@ class Pre:
 
         return display
 
+    def clean_commas(self, line):
+        """Clean comma issues within a single line."""
+        if not line or line.isspace():
+            return ""
+
+        while True:
+            new_line = re.sub(r',\s*,', ',', line)
+            if new_line == line:
+                break
+            line = new_line
+
+        line = re.sub(r',\s*([\)\]])', r'\1', line)
+        line = re.sub(r'^\s*,', '', line)
+        line = re.sub(r'([\(\[])\s*,', r'\1', line)
+        line = line.strip()
+
+        if line == ',' or not line:
+            return ""
+
+        return line
+
     def cleanup(self, display):
-        cleaned_lines = []
+        lines = []
         for line in display.splitlines():
             line = line.strip()
+            if not line:
+                continue
 
-            # collapse repeated commas
-            line = re.sub(r'\s*,\s*,+', ',', line)
-
-            # collapse blank entries
-            while ',,' in line or ', ,' in line:
-                line = re.sub(r',\s*,', ',', line)
-
-            # remove commas before closing brackets/parens
-            line = re.sub(r',\s*\)', ')', line)
-            line = re.sub(r',\s*\]', ']', line)
-
-            # remove empty item at start of brackets/parens
-            line = re.sub(r'\[\s*,\s*', '[', line)
-            line = re.sub(r'\(\s*,\s*', '(', line)
-
-            # remove leading commas/spaces
-            line = re.sub(r'^[\s,]+', '', line)
-
-            # compress trailing commas/spaces → exactly one comma
-            line = re.sub(r'[\s,]+$', ',', line)
-
-            if line == ',':
-                line = ''
-
+            line = self.clean_commas(line)
             if line:
-                cleaned_lines.append(line)
+                line = re.sub(r',\s*$', '', line).rstrip()
+                lines.append(line)
 
-        return '\n'.join(cleaned_lines)
+        if not lines:
+            return ""
+
+        result = []
+        for i, line in enumerate(lines):
+            if i < len(lines) - 1 and line:
+                line = line + ','
+            result.append(line)
+
+        return '\n'.join(result)
 
     def apply_deemphasis(self, display):
         result = []
         i = 0
         while i < len(display):
             if display[i] == '[':
-                # Find matching closing bracket
                 depth = 1
                 j = i + 1
                 while j < len(display) and depth > 0:
@@ -123,9 +130,7 @@ class Pre:
                     j += 1
 
                 if depth == 0:
-                    # Extract inner content (between [ and ])
                     inner = display[i+1:j-1].strip()
-                    # Count nesting: how many unmatched [ are before this position
                     nesting_depth = display[:i].count('[') - display[:i].count(']')
 
                     weight = 0.9 ** (nesting_depth + 1)
@@ -141,7 +146,7 @@ class Pre:
 
         return ''.join(result)
 
-    def process(self, seed, display):
+    def run(self, seed, display):
         stripped = self.remove_comments(display)
         expanded = self.expand_random(seed, stripped)
         cleaned = self.cleanup(expanded)

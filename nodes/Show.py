@@ -11,8 +11,7 @@ class Show:
             "hidden": {"unique_id": "UNIQUE_ID", "extra_pnginfo": "EXTRA_PNGINFO",}
         }
 
-    RETURN_TYPES = (any_type,)
-    RETURN_NAMES = ('output',)
+    RETURN_TYPES = ("STRING",)
     INPUT_IS_LIST = True
     OUTPUT_NODE = True
     FUNCTION = "run"
@@ -26,10 +25,7 @@ class Show:
             parsed_text = "No input provided"
             return {"ui": {"text": [parsed_text]}, "result": ([],)}
 
-        if len(values) == 1:
-            return { "ui": {"text": values}, "result": (values[0],), }
-        else:
-            return { "ui": {"text": values}, "result": (values,), }
+        return { "ui": {"text": values}, "result": (values[0],), }
 
 NODE_CLASS_MAPPINGS = {"Show": Show}
 NODE_DISPLAY_NAME_MAPPINGS = {"Show": "⚙️Show"}

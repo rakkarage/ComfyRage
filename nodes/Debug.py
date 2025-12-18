@@ -12,8 +12,7 @@ class Debug:
             "hidden": {"unique_id": "UNIQUE_ID", "extra_pnginfo": "EXTRA_PNGINFO",}
         }
 
-    RETURN_TYPES = (any_type,)
-    RETURN_NAMES = ('output',)
+    RETURN_TYPES = ("STRING",)
     INPUT_IS_LIST = True
     OUTPUT_NODE = True
     FUNCTION = "run"
@@ -31,13 +30,10 @@ class Debug:
             weights = sd1_clip.token_weights(values[0], 1.0)
             parsed_text = self.format_output(weights)
         except Exception as e:
-            error_text = f"Input {idx} parse error: {str(e)}"
+            error_text = f"Input parse error: {str(e)}"
             all_parsed.append(error_text)
 
-        if len(values) == 1:
-            return {"ui": {"text": [parsed_text]}, "result": (values[0],)}
-        else:
-            return {"ui": {"text": [parsed_text]}, "result": (values,)}
+        return {"ui": {"text": [parsed_text]}, "result": (values[0],)}
 
     def format_output(self, weights):
         if not weights:
