@@ -26,10 +26,7 @@ class Show:
             parsed_text = "No input provided"
             return {"ui": {"text": [parsed_text]}, "result": ([],)}
 
-        if len(values) == 1:
-            return {"ui": {"text": values}, "result": (values[0],)}
-        else:
-            return {"ui": {"text": values}, "result": (values,)}
+        return {"ui": {"text": values}, "result": (", ".join(values),)}
 
 
 NODE_CLASS_MAPPINGS = {"Show": Show}
