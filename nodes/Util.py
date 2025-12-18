@@ -4,7 +4,7 @@ import json
 
 def extract(kwargs):
     if "string" not in kwargs:
-        return values
+        return []
 
     return [str(val) for val in kwargs["string"]]
 

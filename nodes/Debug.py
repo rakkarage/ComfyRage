@@ -30,8 +30,7 @@ class Debug:
             weights = sd1_clip.token_weights(values[0], 1.0)
             parsed_text = self.format_output(weights)
         except Exception as e:
-            error_text = f"Input parse error: {str(e)}"
-            all_parsed.append(error_text)
+            parsed_text = f"Input parse error: {str(e)}"
 
         return {"ui": {"text": [parsed_text]}, "result": (values[0],)}
 
