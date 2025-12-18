@@ -49,8 +49,7 @@ export class ComfyRageCommon {
                 nodeType.prototype.onConfigure = function () {
                     onConfigure?.apply(this, arguments);
                     if (this.widgets_values?.length) {
-                        let values = this.widgets_values[0];
-                        populate.call(this, values, 'text');
+                        populate.call(this, this.widgets_values[0], 'text');
                     }
                 };
 
@@ -58,8 +57,7 @@ export class ComfyRageCommon {
                 nodeType.prototype.serialize = function () {
                     const orig = serialize ? serialize.apply(this, arguments) : {};
                     const textWidgets = this.widgets?.filter(w => w.name === 'text') || [];
-                    const values = textWidgets.map(w => w.value);
-                    return { ...orig, widgets_values: [values] };
+                    return { ...orig, widgets_values: [textWidgets.map(w => w.value)] };
                 };
             }
         };
