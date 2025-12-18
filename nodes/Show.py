@@ -22,11 +22,10 @@ class Show:
         values = extract(kwargs)
         inject(values, unique_id, extra_pnginfo)
 
-        if not values:
-            parsed_text = "No input provided"
-            return {"ui": {"text": [parsed_text]}, "result": ([],)}
-
-        return {"ui": {"text": values}, "result": (", ".join(values),)}
+        return {
+            "ui": {"text": values or ["No input provided"]},
+            "result": (", ".join(values or []),),
+        }
 
 
 NODE_CLASS_MAPPINGS = {"Show": Show}
