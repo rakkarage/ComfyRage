@@ -24,15 +24,14 @@ class Debug:
         inject(values, unique_id, extra_pnginfo)
 
         if not values:
-            parsed_text = "No input provided"
-            return {"ui": {"text": [parsed_text]}, "result": ([],)}
+            return {"ui": {"text": []}, "result": ([],)}
 
         parsed_texts = []
         for val in values:
             weights = sd1_clip.token_weights(val, 1.0)
             parsed_texts.append(self.format_output(weights))
 
-        return {"ui": {"text": [parsed_text]}, "result": (values,)}
+        return {"ui": {"text": [parsed_texts]}, "result": (values,)}
 
     def format_output(self, weights):
         if not weights:
