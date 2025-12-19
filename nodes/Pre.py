@@ -6,7 +6,7 @@ import random, re
 class Pre:
     @staticmethod
     def INPUT_TYPES():
-        EXAMPLE_TEXT = "(((tiger), bobcat), cat), {dog, {leash|}|rabbit|horse|fox|bird}, [simple_background] // Pre strips comments, expands random, and expands de-emphasis, Show + Debug proves it!"
+        EXAMPLE_TEXT = "({cat, {collar|}|dog, {collar|leash, ({viewer_holding_leash|})|}, {bone||}}), [simple_background] // test"
         return {
             "required": {
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
@@ -29,7 +29,7 @@ class Pre:
         return re.sub(r"/\*.*?\*/|//[^\n\r]*", "", string, flags=re.DOTALL)
 
     def expand_random(self, seed, string):
-        random.seed(seed)
+        rng = random.Random(seed)
 
         if string.count("{") != string.count("}"):
             raise ValueError("Unbalanced { } in input string")
@@ -75,7 +75,7 @@ class Pre:
                     buf += ch
             parts.append(buf.strip())
 
-            choice = random.choice(parts) if parts else ""
+            choice = rng.choice(parts) if parts else ""
             string = string[:start] + choice + string[end + 1 :]
 
         return string
