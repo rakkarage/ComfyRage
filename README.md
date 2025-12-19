@@ -16,7 +16,7 @@ Clone into `ComfyUI/custom_nodes`.
 
 ### ⚙️Pre
 
-ComfyUI only expands random prompt syntax when the text is written directly into a CLIP text input. When the prompt is refactored to prevent duplication or routed through subgraphs, the random syntax is **not expanded**.
+ComfyUI expands random prompt syntax **only when the text is written directly into a CLIP text input**. When the prompt is refactored to prevent duplication or routed through subgraphs, the random syntax is **not expanded**.
 
 The **Pre** node expands it once so the final text can be reliably viewed, reused, and passed consistently to downstream nodes.
 
