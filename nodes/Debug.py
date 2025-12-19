@@ -28,7 +28,10 @@ class Debug:
             weights = sd1_clip.token_weights(val, 1.0)
             parsed_texts.append(self.format_output(weights))
 
-        return {"ui": {"text": [parsed_texts]}, "result": (values,)}
+        return {
+            "ui": {"text": parsed_texts},
+            "result": (", ".join(values or []),),
+        }
 
     def format_output(self, weights):
         if not weights:
