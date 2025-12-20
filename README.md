@@ -5,7 +5,7 @@
 ![Screenshot](screenshot.png)
 
 ```
-({cat, {collar|}|dog, {collar|leash, ({viewer_holding_leash|})|}, {bone||}}), [simple_background] // test
+({cat, {collar|}|dog, {collar|leash, ({viewer_holding_leash|})|}, {bone||}}), [[ornate_border], simple_background] // test
 ```
 
 ## Install

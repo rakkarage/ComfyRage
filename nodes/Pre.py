@@ -6,7 +6,7 @@ import random, re
 class Pre:
     @staticmethod
     def INPUT_TYPES():
-        EXAMPLE_TEXT = "({cat, {collar|}|dog, {collar|leash, ({viewer_holding_leash|})|}, {bone||}}), [simple_background] // test"
+        EXAMPLE_TEXT = "({cat, {collar|}|dog, {collar|leash, ({viewer_holding_leash|})|}, {bone||}}), [[ornate_border], simple_background] // test"
         return {
             "required": {
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
@@ -124,35 +124,47 @@ class Pre:
         return "\n".join(result)
 
     def apply_deemphasis(self, string):
-        result = []
-        i = 0
-        while i < len(string):
-            if string[i] == "[":
-                depth = 1
-                j = i + 1
-                while j < len(string) and depth > 0:
-                    if string[j] == "[":
-                        depth += 1
-                    elif string[j] == "]":
-                        depth -= 1
-                    j += 1
+        # Process brackets from innermost to outermost
+        while True:
+            # Find innermost bracket pair
+            start = -1
+            end = -1
+            depth = 0
+            max_depth = 0
 
-                if depth == 0:
-                    inner = string[i + 1 : j - 1].strip()
-                    nesting_depth = string[:i].count("[") - string[:i].count("]")
+            # First, find the deepest nesting level
+            for i, char in enumerate(string):
+                if char == "[":
+                    depth += 1
+                    if depth > max_depth:
+                        max_depth = depth
+                        start = i
+                elif char == "]":
+                    depth -= 1
+                    if depth == max_depth - 1 and start != -1:
+                        end = i
+                        break
 
-                    weight = 0.9 ** (nesting_depth + 1)
-                    weight_str = str(weight).rstrip("0").rstrip(".")
-                    result.append(f"({inner}:{weight_str})")
-                    i = j
-                else:
-                    result.append(string[i])
-                    i += 1
-            else:
-                result.append(string[i])
-                i += 1
+            if start == -1 or end == -1:
+                break
 
-        return "".join(result)
+            # Extract the innermost bracket content
+            inner = string[start + 1 : end].strip()
+
+            # Calculate weight based on nesting depth
+            # Each bracket level multiplies by 0.9
+            # Innermost (depth = max_depth) gets 0.9
+            # Next level gets 0.9 × 0.9 = 0.81, etc.
+            weight = 0.9 ** (max_depth)
+
+            # Format weight string
+            weight_str = f"{weight:.10f}".rstrip("0").rstrip(".")
+
+            # Replace the bracket with weighted parentheses
+            replacement = f"({inner}:{weight_str})"
+            string = string[:start] + replacement + string[end + 1 :]
+
+        return string
 
     def run(self, seed, string):
         stripped = self.remove_comments(string)
