@@ -32,7 +32,7 @@ class Pre:
         rng = random.Random(seed)
 
         if string.count("{") != string.count("}"):
-            raise ValueError("Unbalanced { } in input string")
+            raise ValueError("Unbalanced { } in input.")
 
         def find_brace_block(s):
             start = s.find("{")

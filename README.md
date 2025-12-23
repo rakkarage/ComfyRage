@@ -53,3 +53,16 @@ The **Debug** node lets you **inspect prompt weights** helping you understand ho
 
 - Display weights persistently in the node for inspection.
 - Optionally pass input as output.
+
+---
+
+### ⚙️Notify
+
+ComfyUI does not provide a way to notify the user when the run is complete.
+
+The **Notify** node lets you **be alertered** with browser notification and sound. (Not adding **any** artifacts to image queue.)
+
+**Features:**
+
+- Display browser notification.
+- Play sound.

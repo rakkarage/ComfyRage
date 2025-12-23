@@ -29,6 +29,15 @@ from .nodes.Debug import (
 NODE_CLASS_MAPPINGS.update(debug_map)
 NODE_DISPLAY_NAME_MAPPINGS.update(debug_display_map)
 
+from .nodes.Notify import (
+    NODE_CLASS_MAPPINGS as notify_map,
+    NODE_DISPLAY_NAME_MAPPINGS as notify_display_map,
+)
+
+NODE_CLASS_MAPPINGS.update(notify_map)
+NODE_DISPLAY_NAME_MAPPINGS.update(notify_display_map)
+
+
 WEB_DIRECTORY = os.path.join(os.path.dirname(__file__), "web")
 
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS", "WEB_DIRECTORY"]

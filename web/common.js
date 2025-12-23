@@ -22,7 +22,7 @@ export class ComfyRageCommon {
                     }
 
                     for (const line of text) {
-                        const w = ComfyWidgets.STRING(this, name, ["STRING", { multiline: true, placeholder: "Input string." }], app).widget;
+                        const w = ComfyWidgets.STRING(this, name, ["STRING", { multiline: true, placeholder: "No input." }], app).widget;
                         w.inputEl.readOnly = true;
                         w.inputEl.style.opacity = 0.6;
                         w.value = line;
