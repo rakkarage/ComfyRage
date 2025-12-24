@@ -2,21 +2,13 @@
 
 import { app } from "../../scripts/app.js";
 
-export const playSound = (file, volume) => {
-    if (!file) {
-        file = 'notify.mp3'
-    }
-    if (!(file.startsWith('http') || file.startsWith('https'))) {
-        if (!file.includes('/')) {
-            file = 'assets/' + file
-        }
-        file = new URL(file, import.meta.url)
-    }
-    const url = new URL(file)
-    const audio = new Audio(url)
-    audio.volume = volume
+export const playSound = (file = "assets/notify.mp3", volume = 0.75) => {
+    const base = new URL(file, import.meta.url).toString();
+    const url = `${base}?cachebuster=${Date.now()}_${Math.floor(Math.random() * 1000000)}`;
+    const audio = new Audio(url);
+    audio.volume = volume;
     audio.play()
-}
+};
 
 const NAME = "Notify";
 
@@ -27,7 +19,7 @@ app.registerExtension({
             const oldOnExecuted = nodeType.prototype.onExecuted;
             nodeType.prototype.onExecuted = async function () {
                 oldOnExecuted?.apply(this, arguments);
-                playSound("notify.mp3", 0.5);
+                playSound();
                 if (Notification.permission === "granted") {
                     new Notification("ComfyUI", { body: "Notify!" });
                 } else if (Notification.permission !== "denied") {
