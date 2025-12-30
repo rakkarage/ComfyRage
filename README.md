@@ -10,7 +10,13 @@
 
 ## Install
 
-Clone into `ComfyUI/custom_nodes`.
+Either:
+
+- Search ComfyUI Manager for `ComfyRage` and Install.
+
+Or:
+
+- Clone into `ComfyUI/custom_nodes`.
 
 ## Nodes
 
@@ -58,7 +64,7 @@ The **Debug** node lets you **inspect prompt weights** helping you understand ho
 
 ### ⚙️Notify
 
-ComfyUI does not provide a way to notify the user when the run is complete.
+ComfyUI does not provide a way to notify the user when a run is complete.
 
 The **Notify** node lets you **be alertered** with browser notification and sound. (Not adding **any** artifacts to image queue.)
 

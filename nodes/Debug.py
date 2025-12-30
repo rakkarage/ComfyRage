@@ -19,21 +19,7 @@ class Debug:
     FUNCTION = "run"
     CATEGORY = "text"
 
-    def run(self, unique_id=None, extra_pnginfo=None, **kwargs):
-        values = extract(kwargs)
-        inject(values, unique_id, extra_pnginfo)
-
-        parsed_texts = []
-        for val in values:
-            weights = sd1_clip.token_weights(val, 1.0)
-            parsed_texts.append(self.format_output(weights))
-
-        return {
-            "ui": {"text": parsed_texts},
-            "result": (", ".join(values or []),),
-        }
-
-    def format_output(self, weights):
+    def format(self, weights):
         if not weights:
             return ""
 
@@ -44,10 +30,22 @@ class Debug:
                 token, weight = item
                 weight_str = f"{float(weight):.2f}"
                 lines.append(f"{i:2d}. '{token}' (weight: {weight_str})")
-            else:
-                lines.append(f"{i:2d}. '{item}' (weight: 1.00)")
 
         return "\n".join(lines)
+
+    def run(self, unique_id=None, extra_pnginfo=None, **kwargs):
+        values = extract(kwargs)
+        inject(values, unique_id, extra_pnginfo)
+
+        parsed_texts = []
+        for val in values:
+            weights = sd1_clip.token_weights(val, 1.0)
+            parsed_texts.append(self.format(weights))
+
+        return {
+            "ui": {"text": parsed_texts},
+            "result": (", ".join(values or []),),
+        }
 
 
 NODE_CLASS_MAPPINGS = {"Debug": Debug}

@@ -2,7 +2,7 @@
 
 import { app } from "../../scripts/app.js";
 
-export const playSound = (file = "assets/notify.mp3", volume = 0.75) => {
+export const playSound = (file = "assets/notify.mp3", volume = 1) => {
     const base = new URL(file, import.meta.url).toString();
     const url = `${base}?cachebuster=${Date.now()}_${Math.floor(Math.random() * 1000000)}`;
     const audio = new Audio(url);
