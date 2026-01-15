@@ -2,33 +2,24 @@
 
 import os
 
-NODE_CLASS_MAPPINGS = {}
-NODE_DISPLAY_NAME_MAPPINGS = {}
+from .nodes.Pre import Pre
+from .nodes.Show import Show
+from .nodes.Debug import Debug
+from .nodes.Notify import Notify
 
-from .nodes.Pre import (
-    NODE_CLASS_MAPPINGS as pre_map,
-    NODE_DISPLAY_NAME_MAPPINGS as pre_name_map,
-)
+NODE_CLASS_MAPPINGS = {
+    "Pre": Pre,
+    "Show": Show,
+    "Debug": Debug,
+    "Notify": Notify,
+}
 
-from .nodes.Show import (
-    NODE_CLASS_MAPPINGS as show_map,
-    NODE_DISPLAY_NAME_MAPPINGS as show_name_map,
-)
-
-from .nodes.Debug import (
-    NODE_CLASS_MAPPINGS as debug_map,
-    NODE_DISPLAY_NAME_MAPPINGS as debug_name_map,
-)
-
-from .nodes.Notify import (
-    NODE_CLASS_MAPPINGS as notify_map,
-    NODE_DISPLAY_NAME_MAPPINGS as notify_name_map,
-)
-
-NODE_CLASS_MAPPINGS |= pre_map | show_map | debug_map | notify_map
-NODE_DISPLAY_NAME_MAPPINGS |= (
-    pre_name_map | show_name_map | debug_name_map | notify_name_map
-)
+NODE_DISPLAY_NAME_MAPPINGS = {
+    "Pre": "⚙️Pre",
+    "Show": "👁️Show",
+    "Debug": "🐞Debug",
+    "Notify": "🔔Notify",
+}
 
 WEB_DIRECTORY = os.path.join(os.path.dirname(__file__), "web")
 

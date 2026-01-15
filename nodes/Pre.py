@@ -23,7 +23,7 @@ class Pre:
 
     RETURN_TYPES = ("STRING",)
     FUNCTION = "run"
-    CATEGORY = "text"
+    CATEGORY = "rage"
 
     def remove_comments(self, string):
         return re.sub(r"/\*.*?\*/|//[^\n\r]*", "", string, flags=re.DOTALL)
@@ -173,7 +173,3 @@ class Pre:
         final = self.apply_deemphasis(cleaned)
 
         return (final,)
-
-
-NODE_CLASS_MAPPINGS = {"Pre": Pre}
-NODE_DISPLAY_NAME_MAPPINGS = {"Pre": "⚙️Pre"}

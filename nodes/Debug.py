@@ -17,7 +17,7 @@ class Debug:
     INPUT_IS_LIST = True
     OUTPUT_NODE = True
     FUNCTION = "run"
-    CATEGORY = "text"
+    CATEGORY = "rage"
 
     def format(self, weights):
         if not weights:
@@ -46,7 +46,3 @@ class Debug:
             "ui": {"text": parsed_texts},
             "result": (", ".join(values or []),),
         }
-
-
-NODE_CLASS_MAPPINGS = {"Debug": Debug}
-NODE_DISPLAY_NAME_MAPPINGS = {"Debug": "⚙️Debug"}

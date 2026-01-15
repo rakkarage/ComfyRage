@@ -16,7 +16,7 @@ class Show:
     INPUT_IS_LIST = True
     OUTPUT_NODE = True
     FUNCTION = "run"
-    CATEGORY = "text"
+    CATEGORY = "rage"
 
     def run(self, unique_id=None, extra_pnginfo=None, **kwargs):
         values = extract(kwargs)
@@ -26,7 +26,3 @@ class Show:
             "ui": {"text": values or ["No input provided"]},
             "result": (", ".join(values or []),),
         }
-
-
-NODE_CLASS_MAPPINGS = {"Show": Show}
-NODE_DISPLAY_NAME_MAPPINGS = {"Show": "⚙️Show"}

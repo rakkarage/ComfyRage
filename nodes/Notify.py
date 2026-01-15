@@ -13,11 +13,7 @@ class Notify:
     OUTPUT_NODE = True
     RETURN_TYPES = tuple()
     FUNCTION = "run"
-    CATEGORY = "util"
+    CATEGORY = "rage"
 
     def run(self, **kwargs):
         return {"ui": {"text": ""}, "result": ()}
-
-
-NODE_CLASS_MAPPINGS = {"Notify": Notify}
-NODE_DISPLAY_NAME_MAPPINGS = {"Notify": "⚙️Notify"}
