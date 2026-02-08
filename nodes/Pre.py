@@ -6,7 +6,7 @@ import random, re
 class Pre:
     @staticmethod
     def INPUT_TYPES():
-        EXAMPLE_TEXT = "{medieval, fantasy|post-apocalypse, science_fiction}, (disgaea), disney, feason, [norasuko]"
+        EXAMPLE_TEXT = "{medieval|}, {fantasy|}, {science_fiction|}, {post-apocalypse|}, (disgaea), disney, feason, [norasuko]"
         return {
             "required": {
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
