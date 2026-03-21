@@ -2,7 +2,7 @@
 
 ## Example
 
-![Screenshot](screenshot.png)
+![Screenshot](example_workflows/ComfyRage.png)
 
 ```
 ({cat, {collar|}|dog, {collar|leash, ({viewer_holding_leash|})|}, {bone||}}), [[ornate_border], simple_background] // test
