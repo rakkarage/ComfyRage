@@ -1,4 +1,4 @@
-# ComfyRage
+# 🎲 ComfyRage
 
 ## Example
 
