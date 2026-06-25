@@ -2,4 +2,4 @@
 
 import "./show.js";
 import "./debug.js";
-import "./notify.js";
+import "./alert.js";

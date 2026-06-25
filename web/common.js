@@ -4,6 +4,22 @@ import { app } from "../../scripts/app.js";
 import { ComfyWidgets } from "../../scripts/widgets.js";
 
 export class ComfyRageCommon {
+    static getWidgetInput(widget) {
+        const inputEl = widget?.element ?? widget?.inputEl;
+        if (inputEl?.tagName === "TEXTAREA" || inputEl?.tagName === "INPUT") return inputEl;
+        return inputEl?.querySelector?.("textarea, input") ?? null;
+    }
+
+    static setWidgetReadonly(widget, value) {
+        const inputEl = ComfyRageCommon.getWidgetInput(widget);
+        widget.options = { ...widget.options, read_only: true };
+        widget.comfyRageReadonlyValue = value;
+        if (!inputEl) return;
+
+        inputEl.readOnly = true;
+        inputEl.setAttribute("readonly", "readonly");
+    }
+
     static createDisplayExtension(nodeName) {
         return {
             name: `ComfyRage.${nodeName}.Display`,
@@ -22,10 +38,10 @@ export class ComfyRageCommon {
                     }
 
                     for (const line of text) {
-                        const w = ComfyWidgets.STRING(this, name, ["STRING", { multiline: true, placeholder: "No input." }], app).widget;
-                        w.inputEl.readOnly = true;
-                        w.inputEl.style.opacity = 0.6;
+                        const inputData = ["STRING", { multiline: true, placeholder: "No input.", read_only: true }];
+                        const w = ComfyWidgets.STRING(this, name, inputData, app).widget;
                         w.value = line;
+                        ComfyRageCommon.setWidgetReadonly(w, line);
                     }
 
                     requestAnimationFrame(() => {

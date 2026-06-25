@@ -5,20 +5,20 @@ import os
 from .nodes.Pre import Pre
 from .nodes.Show import Show
 from .nodes.Debug import Debug
-from .nodes.Notify import Notify
+from .nodes.Alert import Alert
 
 NODE_CLASS_MAPPINGS = {
     "Pre": Pre,
     "Show": Show,
     "Debug": Debug,
-    "Notify": Notify,
+    "Alert": Alert,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "Pre": "⚙️Pre",
     "Show": "👁️Show",
     "Debug": "🐞Debug",
-    "Notify": "🔔Notify",
+    "Alert": "🔔Alert",
 }
 
 WEB_DIRECTORY = os.path.join(os.path.dirname(__file__), "web")

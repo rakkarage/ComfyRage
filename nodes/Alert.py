@@ -1,9 +1,11 @@
-# ComfyUI/custom_nodes/ComfyRage/nodes/Notify.py
+# ComfyUI/custom_nodes/ComfyRage/nodes/Alert.py
 
 from .Util import AlwaysEqualProxy
 
 
-class Notify:
+class Alert:
+    """Display browser notification. Play sound."""
+
     @staticmethod
     def INPUT_TYPES():
         return {

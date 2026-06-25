@@ -5,6 +5,8 @@ from .Util import extract, inject
 
 
 class Debug:
+    """Display weights persistently. Optionally forward input."""
+
     @staticmethod
     def INPUT_TYPES():
         return {

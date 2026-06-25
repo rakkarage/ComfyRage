@@ -1,24 +1,28 @@
 # ComfyUI/custom_nodes/ComfyRage/nodes/Pre.py
 
-import random, re
+import random
+import re
 
 
 class Pre:
+    """Strip comments, expand random choices, clean up commas, and apply emphasis to the input string."""
+
     @staticmethod
     def INPUT_TYPES():
         EXAMPLE_TEXT = "({cat, {collar|}|dog, {collar|leash, ({viewer_holding_leash|})|}, {bone||}}), [[ornate_border], simple_background] // test"
         return {
             "required": {
-                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "description": "Seed for random expansion. Use 0 for a random seed."}),
                 "string": (
                     "STRING",
                     {
                         "multiline": True,
                         "placeholder": EXAMPLE_TEXT,
                         "default": EXAMPLE_TEXT,
+                        "description": "Input string to process. Supports comments, random choices, and emphasis.",
                     },
                 ),
-            }
+            },
         }
 
     RETURN_TYPES = ("STRING",)
@@ -56,7 +60,7 @@ class Pre:
                 break
 
             start, end = block
-            inner = string[start + 1 : end]
+            inner = string[start + 1: end]
 
             parts = []
             buf = ""
@@ -76,7 +80,7 @@ class Pre:
             parts.append(buf.strip())
 
             choice = rng.choice(parts) if parts else ""
-            string = string[:start] + choice + string[end + 1 :]
+            string = string[:start] + choice + string[end + 1:]
 
         return string
 
@@ -149,7 +153,7 @@ class Pre:
                 break
 
             # Extract the innermost bracket content
-            inner = string[start + 1 : end].strip()
+            inner = string[start + 1: end].strip()
 
             # Calculate weight based on nesting depth
             # Each bracket level multiplies by 0.9
@@ -162,7 +166,7 @@ class Pre:
 
             # Replace the bracket with weighted parentheses
             replacement = f"({inner}:{weight_str})"
-            string = string[:start] + replacement + string[end + 1 :]
+            string = string[:start] + replacement + string[end + 1:]
 
         return string
 

@@ -1,8 +1,8 @@
-// ComfyUI/custom_nodes/ComfyRage/web/notify.js
+// ComfyUI/custom_nodes/ComfyRage/web/alert.js
 
 import { app } from "../../scripts/app.js";
 
-export const playSound = (file = "assets/notify.mp3", volume = 1) => {
+export const playSound = (file = "assets/alert.mp3", volume = 1) => {
     const base = new URL(file, import.meta.url).toString();
     const url = `${base}?cachebuster=${Date.now()}_${Math.floor(Math.random() * 1000000)}`;
     const audio = new Audio(url);
@@ -10,7 +10,7 @@ export const playSound = (file = "assets/notify.mp3", volume = 1) => {
     audio.play()
 };
 
-const NAME = "Notify";
+const NAME = "Alert";
 
 app.registerExtension({
     name: NAME,
@@ -21,11 +21,11 @@ app.registerExtension({
                 oldOnExecuted?.apply(this, arguments);
                 playSound();
                 if (Notification.permission === "granted") {
-                    new Notification("ComfyUI", { body: "Notify!" });
+                    new Notification("ComfyUI", { body: "Alert!" });
                 } else if (Notification.permission !== "denied") {
                     await Notification.requestPermission();
                     if (Notification.permission === "granted") {
-                        new Notification("ComfyUI", { body: "Notify!" });
+                        new Notification("ComfyUI", { body: "Alert!" });
                     }
                 }
             };

@@ -59,7 +59,7 @@
         },
         {
             "id": 4,
-            "type": "Notify",
+            "type": "Alert",
             "pos": [
                 -70,
                 220
@@ -81,7 +81,7 @@
             ],
             "outputs": [],
             "properties": {
-                "Node name for S&R": "Notify"
+                "Node name for S&R": "Alert"
             }
         },
         {

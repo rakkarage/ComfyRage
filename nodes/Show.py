@@ -4,6 +4,8 @@ from .Util import extract, inject
 
 
 class Show:
+    """Display text persistently. Optionally forward input."""
+
     @staticmethod
     def INPUT_TYPES():
         return {
