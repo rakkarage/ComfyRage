@@ -140,38 +140,38 @@ class Pre:
             string = new_string
 
     def apply_deemphasis(self, string):
-        # Regex explanation:
-        # Group 1: (\[(?:\s*\[)*)  -> Matches one or more '[' (allows spaces between them)
-        # Group 2: ([^\[\]]+?)     -> Matches the inner text (cannot contain brackets)
-        # Group 3: (\](?:\s*\])*)  -> Matches one or more ']' (allows spaces between them)
-        pattern = re.compile(r'(\[(?:\s*\[)*)\s*([^\[\]]+?)\s*(\](?:\s*\])*)')
+        # Stack-based parser to calculate cumulative weights
+        segments = []
+        current_segment = ""
+        depth = 0
 
-        def replacer(match):
-            # Strip spaces to get the raw bracket count
-            left_brackets = match.group(1).replace(" ", "")
-            right_brackets = match.group(3).replace(" ", "")
-            text = match.group(2)
+        for char in string:
+            if char == '[':
+                if current_segment:
+                    segments.append((current_segment, depth))
+                    current_segment = ""
+                depth += 1
+            elif char == ']':
+                if current_segment:
+                    segments.append((current_segment, depth))
+                    current_segment = ""
+                depth -= 1
+            else:
+                current_segment += char
 
-            # Calculate depth based on the total number of contiguous brackets
-            depth = min(len(left_brackets), len(right_brackets))
-            if depth == 0:
-                return match.group(0)
+        if current_segment:
+            segments.append((current_segment, depth))
 
-            # Calculate the final compounded weight
-            weight = 0.9 ** depth
-            weight_str = f"{weight:.10f}".rstrip("0").rstrip(".")
+        result = ""
+        for text, d in segments:
+            if d > 0 and text.strip():
+                final_weight = 0.9 ** d
+                weight_str = f"{final_weight:.10f}".rstrip("0").rstrip(".")
+                result += f"({text.strip()}:{weight_str})"
+            else:
+                result += text
 
-            # Return a SINGLE set of parentheses with the final calculated weight
-            return f"({text}:{weight_str})"
-
-        # Loop until no more matches are found
-        # (handles edge cases where replacing an inner section reveals a new outer section)
-        prev_string = None
-        while prev_string != string:
-            prev_string = string
-            string = pattern.sub(replacer, string)
-
-        return string
+        return result
 
     def run(self, seed, string):
         stripped = self.remove_comments(string)
