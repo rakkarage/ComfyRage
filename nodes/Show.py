@@ -24,7 +24,9 @@ class Show:
         values = extract(kwargs)
         inject(values, unique_id, extra_pnginfo)
 
+        display_text = values if values else [""]
+
         return {
-            "ui": {"text": values or ["No input provided"]},
+            "ui": {"text": display_text},
             "result": (", ".join(values or []),),
         }
