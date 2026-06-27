@@ -174,10 +174,9 @@ class Pre:
         return result
 
     def run(self, seed, string):
-        stripped = self.remove_comments(string)
-        expanded = self.expand_random(seed, stripped)
-        cleaned = self.cleanup(expanded)
-        emphesiszed = self.apply_deemphasis(cleaned)
-        final = self.clean_weight_groups(emphesiszed)
+        result = self.remove_comments(string)
+        result = self.expand_random(seed, result)
+        result = self.apply_deemphasis(result)
+        result = self.clean_weight_groups(result)
 
-        return (final,)
+        return (self.cleanup(result),)
