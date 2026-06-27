@@ -140,45 +140,36 @@ class Pre:
             string = new_string
 
     def apply_deemphasis(self, string):
-        # Process brackets from innermost to outermost
-        while True:
-            # Find innermost bracket pair
-            start = -1
-            end = -1
-            depth = 0
-            max_depth = 0
+        # Regex explanation:
+        # Group 1: (\[(?:\s*\[)*)  -> Matches one or more '[' (allows spaces between them)
+        # Group 2: ([^\[\]]+?)     -> Matches the inner text (cannot contain brackets)
+        # Group 3: (\](?:\s*\])*)  -> Matches one or more ']' (allows spaces between them)
+        pattern = re.compile(r'(\[(?:\s*\[)*)\s*([^\[\]]+?)\s*(\](?:\s*\])*)')
 
-            # First, find the deepest nesting level
-            for i, char in enumerate(string):
-                if char == "[":
-                    depth += 1
-                    if depth > max_depth:
-                        max_depth = depth
-                        start = i
-                elif char == "]":
-                    depth -= 1
-                    if depth == max_depth - 1 and start != -1:
-                        end = i
-                        break
+        def replacer(match):
+            # Strip spaces to get the raw bracket count
+            left_brackets = match.group(1).replace(" ", "")
+            right_brackets = match.group(3).replace(" ", "")
+            text = match.group(2)
 
-            if start == -1 or end == -1:
-                break
+            # Calculate depth based on the total number of contiguous brackets
+            depth = min(len(left_brackets), len(right_brackets))
+            if depth == 0:
+                return match.group(0)
 
-            # Extract the innermost bracket content
-            inner = string[start + 1: end].strip()
-
-            # Calculate weight based on nesting depth
-            # Each bracket level multiplies by 0.9
-            # Innermost (depth = max_depth) gets 0.9
-            # Next level gets 0.9 × 0.9 = 0.81, etc.
-            weight = 0.9 ** (max_depth)
-
-            # Format weight string
+            # Calculate the final compounded weight
+            weight = 0.9 ** depth
             weight_str = f"{weight:.10f}".rstrip("0").rstrip(".")
 
-            # Replace the bracket with weighted parentheses
-            replacement = f"({inner}:{weight_str})"
-            string = string[:start] + replacement + string[end + 1:]
+            # Return a SINGLE set of parentheses with the final calculated weight
+            return f"({text}:{weight_str})"
+
+        # Loop until no more matches are found
+        # (handles edge cases where replacing an inner section reveals a new outer section)
+        prev_string = None
+        while prev_string != string:
+            prev_string = string
+            string = pattern.sub(replacer, string)
 
         return string
 
