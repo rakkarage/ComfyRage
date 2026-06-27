@@ -127,6 +127,18 @@ class Pre:
 
         return "\n".join(result)
 
+    def clean_weight_groups(self, string):
+        if not string:
+            return ""
+
+        while True:
+            new_string = re.sub(r"\(\s*\)", "", string)
+            new_string = re.sub(r"\(\s*:\s*([0-9.]+)\s*\)", "", new_string)
+            new_string = re.sub(r"\(\s*([^()]+?)\s*:\s*([0-9.]+)\s*\)", r"(\1:\2)", new_string)
+            if new_string == string:
+                return new_string
+            string = new_string
+
     def apply_deemphasis(self, string):
         # Process brackets from innermost to outermost
         while True:
@@ -174,6 +186,7 @@ class Pre:
         stripped = self.remove_comments(string)
         expanded = self.expand_random(seed, stripped)
         cleaned = self.cleanup(expanded)
-        final = self.apply_deemphasis(cleaned)
+        emphesiszed = self.apply_deemphasis(cleaned)
+        final = self.clean_weight_groups(emphesiszed)
 
         return (final,)
