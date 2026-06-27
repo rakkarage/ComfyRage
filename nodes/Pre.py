@@ -134,7 +134,10 @@ class Pre:
         while True:
             new_string = re.sub(r"\(\s*\)", "", string)
             new_string = re.sub(r"\(\s*:\s*([0-9.]+)\s*\)", "", new_string)
-            new_string = re.sub(r"\(\s*([^()]+?)\s*:\s*([0-9.]+)\s*\)", r"(\1:\2)", new_string)
+            new_string = re.sub(r"\(\s*,\s*", "(", new_string)
+            new_string = re.sub(r"\(\s*([^()]+?)\s*:\s*([0-9.]+)\s*\)",
+                                lambda m: f"({m.group(1).strip()}:{m.group(2)})",
+                                new_string)
             if new_string == string:
                 return new_string
             string = new_string
