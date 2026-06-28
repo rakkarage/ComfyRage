@@ -15,7 +15,7 @@ def extract(kwargs):
 
     return [str(val) for val in kwargs["string"]]
 
-
+# borrowed hack to save prompt into pnginfo for later retrieval
 def inject(values, unique_id, extra_pnginfo):
     if not extra_pnginfo:
         return
