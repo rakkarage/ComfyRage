@@ -26,7 +26,7 @@ export class ComfyRageCommon {
             async beforeRegisterNodeDef(nodeType, nodeData) {
                 if (nodeData.name !== nodeName) return;
 
-                function populate(text, name = 'text') {
+                function populate(text, name = 'value') {
                     if (this.widgets) {
                         const pos = this.widgets.findIndex(w => w.name === name);
                         if (pos !== -1) {
@@ -57,7 +57,7 @@ export class ComfyRageCommon {
                 nodeType.prototype.onExecuted = function (message) {
                     onExecuted?.apply(this, arguments);
                     if (message?.text !== undefined) {
-                        populate.call(this, message.text, 'text');
+                        populate.call(this, message.text, 'value');
                     }
                 };
 
@@ -65,14 +65,14 @@ export class ComfyRageCommon {
                 nodeType.prototype.onConfigure = function () {
                     onConfigure?.apply(this, arguments);
                     if (this.widgets_values?.length) {
-                        populate.call(this, this.widgets_values[0], 'text');
+                        populate.call(this, this.widgets_values[0], 'value');
                     }
                 };
 
                 const serialize = nodeType.prototype.serialize;
                 nodeType.prototype.serialize = function () {
                     const orig = serialize ? serialize.apply(this, arguments) : {};
-                    const textWidgets = this.widgets?.filter(w => w.name === 'text') || [];
+                    const textWidgets = this.widgets?.filter(w => w.name === 'value') || [];
                     return { ...orig, widgets_values: [textWidgets.map(w => w.value)] };
                 };
             }

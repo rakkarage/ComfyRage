@@ -13,7 +13,7 @@ class Pre:
         return {
             "required": {
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "description": "Seed for random expansion. Use 0 for a random seed."}),
-                "string": (
+                "value": (
                     "STRING",
                     {
                         "multiline": True,
@@ -176,8 +176,8 @@ class Pre:
 
         return result
 
-    def run(self, seed, string):
-        result = self.remove_comments(string)
+    def run(self, seed, value):
+        result = self.remove_comments(value)
         result = self.expand_random(seed, result)
         result = self.apply_deemphasis(result)
         result = self.clean_weight_groups(result)
