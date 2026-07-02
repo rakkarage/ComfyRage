@@ -1,20 +1,20 @@
-# ComfyUI/custom_nodes/ComfyRage/nodes/Pre.py
-
+# ComfyUI/custom_nodes/ComfyRage/nodes/PreShow.py
 import random
 import re
-from .Util import extract, inject
 
 
 class PreShow:
-    """Strip comments, expand random choices, clean up commas, and apply emphasis to the input string. Displays result persistently."""
+    """Strip comments, expand random choices, clean up commas, and apply emphasis
+    to the input string. Displays result persistently."""
 
     @staticmethod
     def INPUT_TYPES():
         EXAMPLE_TEXT = "({cat, {collar|}|dog, {collar|leash, ({viewer_holding_leash|})|}, {bone||}}), [[ornate_border], simple_background] // test "
         return {
             "required": {
-                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "description": "Seed for random expansion. Use 0 for a random seed."}),
-                "string": (
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF,
+                                 "description": "Seed for random expansion. Use 0 for a random seed."}),
+                "pre": (
                     "STRING",
                     {
                         "multiline": True,
@@ -23,10 +23,6 @@ class PreShow:
                         "description": "Input string to process. Supports comments, random choices, and emphasis.",
                     },
                 ),
-            },
-            "hidden": {
-                "unique_id": "UNIQUE_ID",
-                "extra_pnginfo": "EXTRA_PNGINFO",
             },
         }
 
@@ -48,7 +44,6 @@ class PreShow:
             start = s.find("{")
             if start == -1:
                 return None
-
             depth = 0
             for i in range(start, len(s)):
                 if s[i] == "{":
@@ -57,14 +52,12 @@ class PreShow:
                     depth -= 1
                     if depth == 0:
                         return (start, i)
-
             return None
 
         while True:
             block = find_brace_block(string)
             if not block:
                 break
-
             start, end = block
             inner = string[start + 1:end]
 
@@ -93,21 +86,17 @@ class PreShow:
     def clean_commas(self, line):
         if not line or line.isspace():
             return ""
-
         while True:
             new_line = re.sub(r",\s*,", ", ", line)
             if new_line == line:
                 break
             line = new_line
-
         line = re.sub(r",\s*([\)\]])", r"\1", line)
         line = re.sub(r"^\s*,", "", line)
         line = re.sub(r"([\(\[])\s*,", r"\1", line)
         line = line.strip()
-
         if line == "," or not line:
             return ""
-
         return line
 
     def cleanup(self, string):
@@ -116,28 +105,23 @@ class PreShow:
             line = line.strip()
             if not line:
                 continue
-
             line = self.clean_commas(line)
             if line:
                 line = re.sub(r",\s*$", "", line).rstrip()
                 lines.append(line)
-
         if not lines:
             return ""
-
         result = []
         for i, line in enumerate(lines):
             if i < len(lines) - 1 and line:
                 line = line + ","
             result.append(line)
-
         return "\n".join(result)
 
     def clean_weight_groups(self, string):
         if not string:
             return ""
-
-        while True:
+        for _ in range(20):  # guard against pathological input
             new_string = re.sub(r"\(\s*\)", "", string)
             new_string = re.sub(r"\(\s*:\s*([0-9.]+)\s*\)", "", new_string)
             new_string = re.sub(r"\(\s*,\s*", "(", new_string)
@@ -147,12 +131,12 @@ class PreShow:
             if new_string == string:
                 return new_string
             string = new_string
+        return string
 
     def apply_deemphasis(self, string):
         segments = []
         current_segment = ""
         depth = 0
-
         for char in string:
             if char == '[':
                 if current_segment:
@@ -166,10 +150,8 @@ class PreShow:
                 depth -= 1
             else:
                 current_segment += char
-
         if current_segment:
             segments.append((current_segment, depth))
-
         result = ""
         for text, d in segments:
             if d > 0 and text.strip():
@@ -178,21 +160,15 @@ class PreShow:
                 result += f"({text.strip()}:{weight_str})"
             else:
                 result += text
-
         return result
 
-    def run(self, seed, string, unique_id=None, extra_pnginfo=None):
-        result = self.remove_comments(string)
+    def run(self, seed, pre):
+        result = self.remove_comments(pre)
         result = self.expand_random(seed, result)
         result = self.apply_deemphasis(result)
         result = self.clean_weight_groups(result)
         result = self.cleanup(result)
-
-        # Inject into pnginfo for persistence
-        if unique_id and extra_pnginfo:
-            inject(result, unique_id, extra_pnginfo)
-
         return {
-            "ui": {"text": [result] if result else [""]},
+            "ui": {"processed": [result] if result else [""]},
             "result": (result,),
         }
