@@ -3,12 +3,14 @@
 import os
 
 from .nodes.Pre import Pre
+from .nodes.PreShow import PreShow
 from .nodes.Show import Show
 from .nodes.Debug import Debug
 from .nodes.Alert import Alert
 
 NODE_CLASS_MAPPINGS = {
     "Pre": Pre,
+    "PreShow": PreShow,
     "Show": Show,
     "Debug": Debug,
     "Alert": Alert,
@@ -16,6 +18,7 @@ NODE_CLASS_MAPPINGS = {
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "Pre": "⚙️Pre",
+    "PreShow": "⚙️PreShow",
     "Show": "👁️Show",
     "Debug": "🐞Debug",
     "Alert": "🔔Alert",
