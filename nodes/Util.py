@@ -1,6 +1,5 @@
 # ComfyUI/custom_nodes/ComfyRage/nodes/Util.py
 
-
 class AlwaysEqualProxy(str):
     def __eq__(self, _):
         return True
