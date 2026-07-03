@@ -1,6 +1,6 @@
 # ComfyUI/custom_nodes/ComfyRage/nodes/Debug.py
 
-import comfy.sd1_clip as sd1_clip
+import comfy.sd1_clip as sd1_clip  # type: ignore
 from .Util import extract
 
 
