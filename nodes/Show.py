@@ -1,6 +1,6 @@
 # ComfyUI/custom_nodes/ComfyRage/nodes/Show.py
 
-from .Util import extract
+from .Util import extract, inject
 
 
 class Show:
@@ -11,6 +11,10 @@ class Show:
         return {
             "required": {},
             "optional": {"string": ("STRING", {})},
+            "hidden": {
+                "unique_id": "UNIQUE_ID",
+                "extra_pnginfo": "EXTRA_PNGINFO",
+            },
         }
 
     RETURN_TYPES = ("STRING",)
@@ -19,8 +23,9 @@ class Show:
     FUNCTION = "run"
     CATEGORY = "rage"
 
-    def run(self, **kwargs):
+    def run(self, unique_id=None, extra_pnginfo=None, **kwargs):
         values = extract(kwargs)
+        inject(values, unique_id, extra_pnginfo)
         return {
             "ui": {"processed": values or [""]},
             "result": (", ".join(values or []),),

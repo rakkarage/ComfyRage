@@ -1,7 +1,7 @@
 # ComfyUI/custom_nodes/ComfyRage/nodes/Debug.py
 
 import comfy.sd1_clip as sd1_clip  # type: ignore
-from .Util import extract
+from .Util import extract, inject
 
 
 class Debug:
@@ -12,6 +12,10 @@ class Debug:
         return {
             "required": {},
             "optional": {"string": ("STRING", {})},
+            "hidden": {
+                "unique_id": "UNIQUE_ID",
+                "extra_pnginfo": "EXTRA_PNGINFO",
+            },
         }
 
     RETURN_TYPES = ("STRING",)
@@ -31,8 +35,9 @@ class Debug:
                 lines.append(f"{i:2d}. '{token}' (weight: {weight_str})")
         return "\n".join(lines)
 
-    def run(self, **kwargs):
+    def run(self, unique_id=None, extra_pnginfo=None, **kwargs):
         values = extract(kwargs)
+        inject(values, unique_id, extra_pnginfo)
         parsed_texts = []
         for val in values:
             weights = sd1_clip.token_weights(val, 1.0)
