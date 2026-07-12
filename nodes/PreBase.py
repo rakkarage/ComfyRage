@@ -72,7 +72,7 @@ class PreBase:
             return ""
 
         while True:
-            new_line = re.sub(r",\s*,", ", ", line)
+            new_line = re.sub(r",\s*,\s*", ", ", line)
             if new_line == line:
                 break
             line = new_line
