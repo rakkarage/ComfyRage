@@ -23,6 +23,11 @@ app.registerExtension({
         playSound();
         if (Notification.permission === "granted") {
           new Notification("ComfyUI", { body: "Alert!" });
+        } else if (Notification.permission !== "denied") {
+          await Notification.requestPermission();
+          if (Notification.permission === "granted") {
+            new Notification("ComfyUI", { body: "Alert!" });
+          }
         }
       };
     }
