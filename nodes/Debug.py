@@ -37,11 +37,11 @@ class Debug:
 
     def run(self, unique_id=None, extra_pnginfo=None, **kwargs):
         values = extract(kwargs)
-        inject(values, unique_id, extra_pnginfo)
         parsed_texts = []
         for val in values:
             weights = sd1_clip.token_weights(val, 1.0)
             parsed_texts.append(self.format(weights))
+        inject(parsed_texts, unique_id, extra_pnginfo)
         return {
             "ui": {"processed": parsed_texts},
             "result": (", ".join(values or []),),
