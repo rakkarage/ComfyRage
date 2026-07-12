@@ -36,10 +36,9 @@ def inject(values, unique_id, extra_pnginfo, keep=0):
 
     node = next((x for x in workflow["nodes"] if str(x["id"]) == str(uid)), None)
     if node:
-        # keep=0 (default): replace widgets_values entirely, as before --
-        # correct for nodes like Show/Debug with no real widgets ahead of
-        # the display one. keep=N: preserve the first N entries (e.g.
-        # PreShow's seed/pre) instead of letting them get overwritten by
-        # the display text.
+        # keep=0 (default): replace widgets_values entirely -- correct for
+        # nodes like Show/Debug with no real widgets ahead of the display
+        # one. keep=N: preserve the first N entries (e.g. PreShow's
+        # seed/control_after_generate/pre) instead of overwriting them.
         existing = node.get("widgets_values") or []
         node["widgets_values"] = list(existing[:keep]) + [values]

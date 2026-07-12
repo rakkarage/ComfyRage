@@ -25,10 +25,8 @@ export class ComfyRageCommon {
       async beforeRegisterNodeDef(nodeType, nodeData) {
         if (nodeData.name !== nodeName) return;
 
-        // <--- FIX: Default name is now 'processed'
         function populate(text, name = "processed") {
           if (this.widgets) {
-            // Remove ONLY the display widgets, don't nuke everything after
             const toRemove = this.widgets.filter((w) => w.name === name);
             for (const w of toRemove) w.onRemove?.();
             this.widgets = this.widgets.filter((w) => w.name !== name);
@@ -56,7 +54,6 @@ export class ComfyRageCommon {
         const onExecuted = nodeType.prototype.onExecuted;
         nodeType.prototype.onExecuted = function (message) {
           onExecuted?.apply(this, arguments);
-          // <--- FIX: Look for 'processed' instead of 'text'
           if (message?.processed !== undefined) {
             populate.call(this, message.processed, "processed");
           }
@@ -66,7 +63,15 @@ export class ComfyRageCommon {
         nodeType.prototype.onConfigure = function () {
           onConfigure?.apply(this, arguments);
           if (!this.widgets_values?.length) return;
-          // <--- FIX: Read the saved text from the END of widgets_values
+
+          // The "processed" widget doesn't exist yet at this point (it's created
+          // below by populate()), so widgets_values here is just the real widgets
+          // unless a previous run's display text was saved too. Bail if not.
+          const knownWidgetCount = (this.widgets ?? []).filter(
+            (w) => w.name !== "processed",
+          ).length;
+          if (this.widgets_values.length <= knownWidgetCount) return;
+
           const saved = this.widgets_values[this.widgets_values.length - 1];
           if (saved !== undefined) {
             populate.call(
@@ -75,21 +80,6 @@ export class ComfyRageCommon {
               "processed",
             );
           }
-        };
-
-        const serialize = nodeType.prototype.serialize;
-        nodeType.prototype.serialize = function () {
-          const orig = serialize ? serialize.apply(this, arguments) : {};
-          // <--- FIX: Append the display widget to existing inputs, don't overwrite them!
-          let vals = Array.isArray(orig.widgets_values)
-            ? [...orig.widgets_values]
-            : [];
-          const textW = this.widgets?.find((w) => w.name === "processed");
-          if (textW) {
-            vals.push(textW.value);
-          }
-          orig.widgets_values = vals;
-          return orig;
         };
       },
     };
