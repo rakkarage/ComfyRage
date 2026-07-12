@@ -22,7 +22,9 @@ class PreShow(PreBase):
     def run(self, seed, pre, unique_id=None, extra_pnginfo=None):
         result = self.process(seed, pre)
         if unique_id and extra_pnginfo:
-            inject(result, unique_id, extra_pnginfo)
+            # keep=2: preserve the seed/pre widget values, only replace
+            # the trailing display entry.
+            inject(result, unique_id, extra_pnginfo, keep=2)
         return {
             "ui": {"processed": [result] if result else [""]},
             "result": (result,),
