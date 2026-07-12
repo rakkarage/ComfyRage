@@ -1,216 +1,181 @@
 {
-    "id": "5e60d9ae-c985-4e85-8635-8b76e592d2ee",
-    "revision": 0,
-    "last_node_id": 4,
-    "last_link_id": 3,
-    "nodes": [
+  "id": "a25a1490-1801-47bc-98da-32dec90cc2b5",
+  "revision": 0,
+  "last_node_id": 5,
+  "last_link_id": 4,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "PreShow",
+      "pos": [-1500, -70],
+      "size": [400, 270],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [
         {
-            "id": 1,
-            "type": "Pre",
-            "pos": [
-                -1100,
-                130
-            ],
-            "size": [
-                400,
-                200
-            ],
-            "flags": {},
-            "order": 0,
-            "mode": 0,
-            "inputs": [
-                {
-                    "localized_name": "seed",
-                    "name": "seed",
-                    "type": "INT",
-                    "widget": {
-                        "name": "seed"
-                    },
-                    "link": null
-                },
-                {
-                    "localized_name": "string",
-                    "name": "string",
-                    "type": "STRING",
-                    "widget": {
-                        "name": "string"
-                    },
-                    "link": null
-                }
-            ],
-            "outputs": [
-                {
-                    "localized_name": "STRING",
-                    "name": "STRING",
-                    "type": "STRING",
-                    "links": [
-                        1
-                    ]
-                }
-            ],
-            "properties": {
-                "Node name for S&R": "Pre"
-            },
-            "widgets_values": [
-                507943678415775,
-                "randomize",
-                "({cat, {collar|}|dog, {collar|leash, ({viewer_holding_leash|})|}, {bone||}}), [[ornate_border], simple_background] // test"
-            ]
+          "localized_name": "seed",
+          "name": "seed",
+          "type": "INT",
+          "widget": { "name": "seed" },
+          "link": null
         },
         {
-            "id": 4,
-            "type": "Alert",
-            "pos": [
-                -70,
-                220
-            ],
-            "size": [
-                140,
-                26
-            ],
-            "flags": {},
-            "order": 3,
-            "mode": 0,
-            "inputs": [
-                {
-                    "localized_name": "any",
-                    "name": "any",
-                    "type": "*",
-                    "link": 3
-                }
-            ],
-            "outputs": [],
-            "properties": {
-                "Node name for S&R": "Alert"
-            }
-        },
-        {
-            "id": 2,
-            "type": "Show",
-            "pos": [
-                -670,
-                160
-            ],
-            "size": [
-                270,
-                170
-            ],
-            "flags": {},
-            "order": 1,
-            "mode": 0,
-            "inputs": [
-                {
-                    "localized_name": "string",
-                    "name": "string",
-                    "shape": 7,
-                    "type": "STRING",
-                    "widget": {
-                        "name": "string"
-                    },
-                    "link": 1
-                }
-            ],
-            "outputs": [
-                {
-                    "localized_name": "STRING",
-                    "name": "STRING",
-                    "type": "STRING",
-                    "links": [
-                        2
-                    ]
-                }
-            ],
-            "properties": {
-                "Node name for S&R": "Show"
-            },
-            "widgets_values": [
-                [
-                    "(dog, leash, (viewer_holding_leash)), ((ornate_border:0.81), simple_background:0.9)"
-                ]
-            ]
-        },
-        {
-            "id": 3,
-            "type": "Debug",
-            "pos": [
-                -370,
-                190
-            ],
-            "size": [
-                270,
-                140
-            ],
-            "flags": {},
-            "order": 2,
-            "mode": 0,
-            "inputs": [
-                {
-                    "localized_name": "string",
-                    "name": "string",
-                    "shape": 7,
-                    "type": "STRING",
-                    "widget": {
-                        "name": "string"
-                    },
-                    "link": 2
-                }
-            ],
-            "outputs": [
-                {
-                    "localized_name": "STRING",
-                    "name": "STRING",
-                    "type": "STRING",
-                    "links": [
-                        3
-                    ]
-                }
-            ],
-            "properties": {
-                "Node name for S&R": "Debug"
-            },
-            "widgets_values": [
-                [
-                    " 0. 'dog, leash, ' (weight: 1.10)\n 1. 'viewer_holding_leash' (weight: 1.21)\n 2. ', ' (weight: 1.00)\n 3. 'ornate_border' (weight: 0.81)\n 4. ', simple_background' (weight: 0.90)"
-                ]
-            ]
+          "localized_name": "pre",
+          "name": "pre",
+          "type": "STRING",
+          "widget": { "name": "pre" },
+          "link": null
         }
-    ],
-    "links": [
-        [
-            1,
-            1,
-            0,
-            2,
-            0,
-            "STRING"
-        ],
-        [
-            2,
-            2,
-            0,
-            3,
-            0,
-            "STRING"
-        ],
-        [
-            3,
-            3,
-            0,
-            4,
-            0,
-            "STRING"
-        ]
-    ],
-    "groups": [],
-    "config": {},
-    "extra": {
-        "ds": {
-            "scale": 1.856555040269182,
-            "offset": [
-                768.9498675648557,
-                74.6098628132172
-            ]
+      ],
+      "outputs": [
+        {
+          "localized_name": "STRING",
+          "name": "STRING",
+          "type": "STRING",
+          "links": [1]
         }
+      ],
+      "properties": { "Node name for S&R": "PreShow" },
+      "widgets_values": [
+        6203757871497,
+        "randomize",
+        "({cat, {collar|}|dog, {collar|leash, ({viewer_holding_leash|})|}, {bone||}}), [[ornate_border], simple_background] // test",
+        "(dog, leash, (viewer_holding_leash)), (ornate_border:0.81)(simple_background:0.9)"
+      ]
     },
-    "version": 0.4
+    {
+      "id": 2,
+      "type": "Pre",
+      "pos": [-1000, -70],
+      "size": [400, 270],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "seed",
+          "name": "seed",
+          "type": "INT",
+          "widget": { "name": "seed" },
+          "link": null
+        },
+        {
+          "localized_name": "pre",
+          "name": "pre",
+          "type": "STRING",
+          "widget": { "name": "pre" },
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "STRING",
+          "name": "STRING",
+          "type": "STRING",
+          "links": [2]
+        }
+      ],
+      "properties": { "Node name for S&R": "Pre" },
+      "widgets_values": [
+        1034897509480796,
+        "randomize",
+        "({cat, {collar|}|dog, {collar|leash, ({viewer_holding_leash|})|}, {bone||}}), [[ornate_border], simple_background] // test"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "Show",
+      "pos": [-500, -70],
+      "size": [400, 270],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "string",
+          "name": "string",
+          "shape": 7,
+          "type": "STRING",
+          "widget": { "name": "string" },
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "STRING",
+          "name": "STRING",
+          "type": "STRING",
+          "links": [3]
+        }
+      ],
+      "properties": { "Node name for S&R": "Show" },
+      "widgets_values": [
+        "",
+        "(dog, leash, (viewer_holding_leash)), (ornate_border:0.81)(simple_background:0.9)"
+      ]
+    },
+    {
+      "id": 4,
+      "type": "Debug",
+      "pos": [0, -70],
+      "size": [400, 270],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "string",
+          "name": "string",
+          "shape": 7,
+          "type": "STRING",
+          "widget": { "name": "string" },
+          "link": 3
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "STRING",
+          "name": "STRING",
+          "type": "STRING",
+          "links": [4]
+        }
+      ],
+      "properties": { "Node name for S&R": "Debug" },
+      "widgets_values": [
+        "",
+        " 0. 'dog, leash, ' (weight: 1.10)\n 1. 'viewer_holding_leash' (weight: 1.21)\n 2. ', ' (weight: 1.00)\n 3. 'ornate_border' (weight: 0.81)\n 4. 'simple_background' (weight: 0.90)"
+      ]
+    },
+    {
+      "id": 5,
+      "type": "Alert",
+      "pos": [500, -70],
+      "size": [225, 72],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        { "localized_name": "any", "name": "any", "type": "*", "link": 4 }
+      ],
+      "outputs": [],
+      "properties": { "Node name for S&R": "Alert" },
+      "widgets_values": []
+    }
+  ],
+  "links": [
+    [1, 1, 0, 2, 1, "STRING"],
+    [2, 2, 0, 3, 0, "STRING"],
+    [3, 3, 0, 4, 0, "STRING"],
+    [4, 4, 0, 5, 0, "STRING"]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1.7715610000000022,
+      "offset": [-45.85565813475153, 252.33538962790473]
+    }
+  },
+  "version": 0.4
 }
