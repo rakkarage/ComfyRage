@@ -25,6 +25,9 @@ class PreBase:
         return re.sub(r"/\*.*?\*/|//[^\n\r]*", "", string, flags=re.DOTALL)
 
     def expand_random(self, seed, string):
+        if seed == 0:
+            seed = random.randint(0, 0xFFFFFFFFFFFFFFFF)
+
         rng = random.Random(seed)
 
         if string.count("{") != string.count("}"):
