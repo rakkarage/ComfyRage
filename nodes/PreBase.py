@@ -85,13 +85,13 @@ class PreBase:
         if not line or line.isspace():
             return ""
 
-        line = re.sub(r",{2,}", ",", line)
-        line = re.sub(r",\s*([\)\]])", r"\1", line)
-        line = re.sub(r"^\s*,", "", line)
-        line = re.sub(r"([\(\[])\s*,", r"\1", line)
-        line = line.strip().strip(',')
+        parts = [part.strip() for part in line.split(",")]
+        parts = [part for part in parts if part]
 
-        return line if line else ""
+        if not parts:
+            return ""
+
+        return ", ".join(parts)
 
     def cleanup(self, string):
         lines = []
