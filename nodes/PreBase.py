@@ -136,7 +136,6 @@ class PreBase:
         segments = []
         current_segment = ""
         depth = 0
-
         for char in string:
             if char == '[':
                 if current_segment:
@@ -150,19 +149,28 @@ class PreBase:
                 depth -= 1
             else:
                 current_segment += char
-
         if current_segment:
             segments.append((current_segment, depth))
 
         result = ""
         for text, d in segments:
             if d > 0 and text.strip():
-                final_weight = 0.9 ** d
-                weight_str = f"{final_weight:.10f}".rstrip("0").rstrip(".")
-                result += f"({text.strip()}:{weight_str})"
+                # Check if the text already has a weight (e.g., "text:1.2")
+                match = re.match(r"^(.*?):([0-9.]+)$", text.strip())
+                if match:
+                    inner_text, existing_weight = match.groups()
+                    # Perform math: multiply existing weight by 0.9^depth
+                    final_weight = float(existing_weight) * (0.9 ** d)
+                else:
+                    inner_text = text.strip()
+                    # No existing weight, just apply 0.9^depth
+                    final_weight = 0.9 ** d
+
+                # Format the weight to avoid ugly long decimals
+                weight_str = f"{final_weight:.4f}".rstrip("0").rstrip(".")
+                result += f"({inner_text}:{weight_str})"
             else:
                 result += text
-
         return result
 
     def process(self, seed, pre):
