@@ -5,7 +5,7 @@ import re
 
 
 class PreBase:
-    """Shared processing logic for Pre and PreShow."""
+    """Shared processing logic for Pre and PreShow: strip comments, expand random choices, clean up commas, and apply emphasis."""
 
     EXAMPLE_TEXT = "({cat, {collar|}|dog, {collar|leash, ({viewer_holding_leash|})|}, {bone||}}), [[ornate_border], simple_background] // test"
 
@@ -20,20 +20,28 @@ class PreBase:
                 "pre": ("STRING", {"multiline": True, "placeholder": PreBase.EXAMPLE_TEXT, "default": PreBase.EXAMPLE_TEXT}),
             },
         }
-    
+
     def remove_comments(self, string):
         return re.sub(r"/\*.*?\*/|//[^\n\r]*", "", string, flags=re.DOTALL)
 
     def expand_random(self, seed, string):
         rng = random.Random(seed)
-        # Single-pass stack-based expansion
-        stack = []
+
+        if string.count("{") != string.count("}"):
+            raise ValueError("Unbalanced { } in input.")
+        if string.count("[") != string.count("]"):
+            raise ValueError("Unbalanced [ ] in input.")
+        if string.count("(") != string.count(")"):
+            raise ValueError("Unbalanced ( ) in input.")
+
+        return self._expand_recursive(rng, string)
+
+    def _expand_recursive(self, rng, string):
         result = []
         i = 0
         while i < len(string):
             char = string[i]
             if char == '{':
-                # Find the matching closing brace
                 depth = 1
                 j = i + 1
                 while j < len(string) and depth > 0:
@@ -47,7 +55,6 @@ class PreBase:
                     raise ValueError("Unbalanced { } in input.")
 
                 inner = string[i+1:j-1]
-                # Split by | at depth 0
                 parts = []
                 buf = ""
                 d = 0
@@ -66,7 +73,8 @@ class PreBase:
                 parts.append(buf.strip())
 
                 choice = rng.choice(parts) if parts else ""
-                result.append(choice)
+
+                result.append(self._expand_recursive(rng, choice))
                 i = j
             else:
                 result.append(char)
@@ -77,16 +85,10 @@ class PreBase:
         if not line or line.isspace():
             return ""
 
-        # 1. Remove double/triple commas
         line = re.sub(r",{2,}", ",", line)
-
-        # 2. Remove commas before closing brackets/parens
         line = re.sub(r",\s*([\)\]])", r"\1", line)
-
-        # 3. Remove commas after opening brackets/parens
+        line = re.sub(r"^\s*,", "", line)
         line = re.sub(r"([\(\[])\s*,", r"\1", line)
-
-        # 4. Trim leading/trailing whitespace and commas
         line = line.strip().strip(',')
 
         return line if line else ""
@@ -101,28 +103,41 @@ class PreBase:
         if not lines:
             return ""
 
-        # Join lines with commas, ensuring no double commas at join points
-        # We don't need to strip/add commas per line if we join carefully
         result_parts = []
         for line in lines:
-            # If the line already ends with a structural char (like |), don't add comma
             if line.endswith('|') or line.endswith('AND'):
                 result_parts.append(line)
             else:
                 result_parts.append(line + ",")
 
-        # Join with newlines, then remove any trailing comma from the very last line
-        final_string = "\n".join(result_parts)
-        return final_string.rstrip(',')
+        return "\n".join(result_parts).rstrip(',')
 
     def clean_weight_groups(self, string):
         if not string:
             return ""
-        # Simplified: just ensure no empty groups or weird spacing
-        string = re.sub(r"\(\s*\)", "", string)
-        string = re.sub(r"\(\s*:\s*[0-9.]+\s*\)", "", string)
-        string = re.sub(r"\(\s*,\s*", "(", string)
-        string = re.sub(r"\(\s*([^()]+?)\s*:\s*([0-9.]+)\s*\)", lambda m: f"({m.group(1).strip()}:{m.group(2)})", string)
+
+        depth = 0
+        for char in string:
+            if char == '(':
+                depth += 1
+            elif char == ')':
+                depth -= 1
+                if depth < 0:
+                    raise ValueError("Unbalanced ( ) in input.")
+        if depth != 0:
+            raise ValueError("Unbalanced ( ) in input.")
+
+        for _ in range(20):
+            new_string = re.sub(r"\(\s*\)", "", string)
+            new_string = re.sub(r"\(\s*:\s*([0-9.]+)\s*\)", "", new_string)
+            new_string = re.sub(r"\(\s*,\s*", "(", new_string)
+            new_string = re.sub(r"\(\s*([^()]+?)\s*:\s*([0-9.]+)\s*\)",
+                                lambda m: f"({m.group(1).strip()}:{m.group(2)})",
+                                new_string)
+            if new_string == string:
+                return new_string
+            string = new_string
+
         return string
 
     def apply_deemphasis(self, string):
@@ -140,10 +155,15 @@ class PreBase:
                     segments.append((current_segment, depth))
                 current_segment = ""
                 depth -= 1
+                if depth < 0:
+                    raise ValueError("Unbalanced [ ] in input.")
             else:
                 current_segment += char
         if current_segment:
             segments.append((current_segment, depth))
+
+        if depth != 0:
+            raise ValueError("Unbalanced [ ] in input.")
 
         result = ""
         for text, d in segments:
