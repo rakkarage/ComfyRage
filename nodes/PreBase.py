@@ -20,6 +20,10 @@ class PreBase:
 
         if string.count("{") != string.count("}"):
             raise ValueError("Unbalanced { } in input.")
+        if string.count("[") != string.count("]"):
+            raise ValueError("Unbalanced [ ] in input.")
+        if string.count("(") != string.count(")"):
+            raise ValueError("Unbalanced ( ) in input.")
 
         def find_brace_block(s):
             start = s.find("{")
