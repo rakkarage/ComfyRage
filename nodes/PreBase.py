@@ -96,21 +96,22 @@ class PreBase:
     def cleanup(self, string):
         lines = []
         for line in string.splitlines():
-            cleaned = self.clean_commas(line)
-            if cleaned:
-                lines.append(cleaned)
-
+            line = line.strip()
+            if not line:
+                continue
+            line = self.clean_commas(line)
+            if line:
+                line = re.sub(r",\s*$", "", line).rstrip()
+                line = re.sub(r" +", " ", line)
+                lines.append(line)
         if not lines:
             return ""
-
-        result_parts = []
-        for line in lines:
-            if line.endswith('|') or line.endswith('AND'):
-                result_parts.append(line)
-            else:
-                result_parts.append(line + ",")
-
-        return "\n".join(result_parts).rstrip(',')
+        result = []
+        for i, line in enumerate(lines):
+            if i < len(lines) - 1 and line:
+                line = line + ","
+            result.append(line)
+        return "\n".join(result)
 
     def clean_weight_groups(self, string):
         if not string:
