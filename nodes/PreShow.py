@@ -9,7 +9,7 @@ class PreShow(PreBase):
 
     @staticmethod
     def INPUT_TYPES():
-        types = PreShow._input_types()
+        types = PreBase.INPUT_TYPES()
         types["hidden"] = {
             "unique_id": "UNIQUE_ID",
             "extra_pnginfo": "EXTRA_PNGINFO",

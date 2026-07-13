@@ -8,7 +8,7 @@ class Pre(PreBase):
 
     @staticmethod
     def INPUT_TYPES():
-        return Pre._input_types()
+        return PreBase.INPUT_TYPES()
 
     RETURN_TYPES = ("STRING",)
 

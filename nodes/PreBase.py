@@ -5,134 +5,127 @@ import re
 
 
 class PreBase:
-    """Shared processing logic for Pre and PreShow: strip comments, expand random choices, clean up commas, and apply emphasis to the input string. Subclasses provide INPUT_TYPES/RETURN_TYPES/OUTPUT_NODE and run()."""
+    """Shared processing logic for Pre and PreShow."""
 
     EXAMPLE_TEXT = "({cat, {collar|}|dog, {collar|leash, ({viewer_holding_leash|})|}, {bone||}}), [[ornate_border], simple_background] // test"
 
     FUNCTION = "run"
     CATEGORY = "rage"
 
+    @staticmethod
+    def INPUT_TYPES():
+        return {
+            "required": {
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF}),
+                "pre": ("STRING", {"multiline": True, "placeholder": PreBase.EXAMPLE_TEXT, "default": PreBase.EXAMPLE_TEXT}),
+            },
+        }
+    
     def remove_comments(self, string):
         return re.sub(r"/\*.*?\*/|//[^\n\r]*", "", string, flags=re.DOTALL)
 
     def expand_random(self, seed, string):
         rng = random.Random(seed)
+        # Single-pass stack-based expansion
+        stack = []
+        result = []
+        i = 0
+        while i < len(string):
+            char = string[i]
+            if char == '{':
+                # Find the matching closing brace
+                depth = 1
+                j = i + 1
+                while j < len(string) and depth > 0:
+                    if string[j] == '{':
+                        depth += 1
+                    elif string[j] == '}':
+                        depth -= 1
+                    j += 1
 
-        if string.count("{") != string.count("}"):
-            raise ValueError("Unbalanced { } in input.")
-        if string.count("[") != string.count("]"):
-            raise ValueError("Unbalanced [ ] in input.")
-        if string.count("(") != string.count(")"):
-            raise ValueError("Unbalanced ( ) in input.")
+                if depth != 0:
+                    raise ValueError("Unbalanced { } in input.")
 
-        def find_brace_block(s):
-            start = s.find("{")
-            if start == -1:
-                return None
+                inner = string[i+1:j-1]
+                # Split by | at depth 0
+                parts = []
+                buf = ""
+                d = 0
+                for c in inner:
+                    if c == '{':
+                        d += 1
+                        buf += c
+                    elif c == '}':
+                        d -= 1
+                        buf += c
+                    elif c == '|' and d == 0:
+                        parts.append(buf.strip())
+                        buf = ""
+                    else:
+                        buf += c
+                parts.append(buf.strip())
 
-            depth = 0
-            for i in range(start, len(s)):
-                if s[i] == "{":
-                    depth += 1
-                elif s[i] == "}":
-                    depth -= 1
-                    if depth == 0:
-                        return (start, i)
-
-            return None
-
-        while True:
-            block = find_brace_block(string)
-            if not block:
-                break
-
-            start, end = block
-            inner = string[start + 1: end]
-
-            parts = []
-            buf = ""
-            depth = 0
-            for ch in inner:
-                if ch == "{":
-                    depth += 1
-                    buf += ch
-                elif ch == "}":
-                    depth -= 1
-                    buf += ch
-                elif ch == "|" and depth == 0:
-                    parts.append(buf.strip())
-                    buf = ""
-                else:
-                    buf += ch
-            parts.append(buf.strip())
-
-            choice = rng.choice(parts) if parts else ""
-            string = string[:start] + choice + string[end + 1:]
-
-        return string
+                choice = rng.choice(parts) if parts else ""
+                result.append(choice)
+                i = j
+            else:
+                result.append(char)
+                i += 1
+        return "".join(result)
 
     def clean_commas(self, line):
         if not line or line.isspace():
             return ""
 
-        while True:
-            new_line = re.sub(r",\s*,\s*", ", ", line)
-            if new_line == line:
-                break
-            line = new_line
+        # 1. Remove double/triple commas
+        line = re.sub(r",{2,}", ",", line)
 
+        # 2. Remove commas before closing brackets/parens
         line = re.sub(r",\s*([\)\]])", r"\1", line)
-        line = re.sub(r"^\s*,", "", line)
+
+        # 3. Remove commas after opening brackets/parens
         line = re.sub(r"([\(\[])\s*,", r"\1", line)
-        line = line.strip()
 
-        if line == "," or not line:
-            return ""
+        # 4. Trim leading/trailing whitespace and commas
+        line = line.strip().strip(',')
 
-        return line
+        return line if line else ""
 
     def cleanup(self, string):
         lines = []
         for line in string.splitlines():
-            line = line.strip()
-            if not line:
-                continue
-
-            line = self.clean_commas(line)
-            if line:
-                line = re.sub(r",\s*$", "", line).rstrip()
-                lines.append(line)
+            cleaned = self.clean_commas(line)
+            if cleaned:
+                lines.append(cleaned)
 
         if not lines:
             return ""
 
-        result = []
-        for i, line in enumerate(lines):
-            if i < len(lines) - 1 and line:
-                line = line + ","
-            result.append(line)
+        # Join lines with commas, ensuring no double commas at join points
+        # We don't need to strip/add commas per line if we join carefully
+        result_parts = []
+        for line in lines:
+            # If the line already ends with a structural char (like |), don't add comma
+            if line.endswith('|') or line.endswith('AND'):
+                result_parts.append(line)
+            else:
+                result_parts.append(line + ",")
 
-        return "\n".join(result)
+        # Join with newlines, then remove any trailing comma from the very last line
+        final_string = "\n".join(result_parts)
+        return final_string.rstrip(',')
 
     def clean_weight_groups(self, string):
         if not string:
             return ""
-
-        for _ in range(20):  # guard against pathological input
-            new_string = re.sub(r"\(\s*\)", "", string)
-            new_string = re.sub(r"\(\s*:\s*([0-9.]+)\s*\)", "", new_string)
-            new_string = re.sub(r"\(\s*,\s*", "(", new_string)
-            new_string = re.sub(r"\(\s*([^()]+?)\s*:\s*([0-9.]+)\s*\)",
-                                lambda m: f"({m.group(1).strip()}:{m.group(2)})",
-                                new_string)
-            if new_string == string:
-                return new_string
-            string = new_string
-
+        # Simplified: just ensure no empty groups or weird spacing
+        string = re.sub(r"\(\s*\)", "", string)
+        string = re.sub(r"\(\s*:\s*[0-9.]+\s*\)", "", string)
+        string = re.sub(r"\(\s*,\s*", "(", string)
+        string = re.sub(r"\(\s*([^()]+?)\s*:\s*([0-9.]+)\s*\)", lambda m: f"({m.group(1).strip()}:{m.group(2)})", string)
         return string
 
     def apply_deemphasis(self, string):
-        # Stack-based parser to calculate cumulative weights
         segments = []
         current_segment = ""
         depth = 0
@@ -140,12 +133,12 @@ class PreBase:
             if char == '[':
                 if current_segment:
                     segments.append((current_segment, depth))
-                    current_segment = ""
+                current_segment = ""
                 depth += 1
             elif char == ']':
                 if current_segment:
                     segments.append((current_segment, depth))
-                    current_segment = ""
+                current_segment = ""
                 depth -= 1
             else:
                 current_segment += char
@@ -155,18 +148,14 @@ class PreBase:
         result = ""
         for text, d in segments:
             if d > 0 and text.strip():
-                # Check if the text already has a weight (e.g., "text:1.2")
                 match = re.match(r"^(.*?):([0-9.]+)$", text.strip())
                 if match:
                     inner_text, existing_weight = match.groups()
-                    # Perform math: multiply existing weight by 0.9^depth
                     final_weight = float(existing_weight) * (0.9 ** d)
                 else:
                     inner_text = text.strip()
-                    # No existing weight, just apply 0.9^depth
                     final_weight = 0.9 ** d
 
-                # Format the weight to avoid ugly long decimals
                 weight_str = f"{final_weight:.4f}".rstrip("0").rstrip(".")
                 result += f"({inner_text}:{weight_str})"
             else:
@@ -179,20 +168,3 @@ class PreBase:
         result = self.apply_deemphasis(result)
         result = self.clean_weight_groups(result)
         return self.cleanup(result)
-
-    @classmethod
-    def _input_types(cls):
-        return {
-            "required": {
-                "seed": ("INT", {"default": 0, "min": 0, "max": 0xFFFFFFFFFFFFFFFF, "description": "Seed for random expansion. Use 0 for a random seed."}),
-                "pre": (
-                    "STRING",
-                    {
-                        "multiline": True,
-                        "placeholder": cls.EXAMPLE_TEXT,
-                        "default": cls.EXAMPLE_TEXT,
-                        "description": "Input string to process. Supports comments, random choices, and emphasis.",
-                    },
-                ),
-            },
-        }
