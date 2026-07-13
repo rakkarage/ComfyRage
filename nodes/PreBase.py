@@ -72,6 +72,9 @@ class PreBase:
                         buf += c
                 parts.append(buf.strip())
 
+                if len(parts) <= 1:
+                    raise ValueError(f"Invalid random block '{{{inner}}}': must contain at least one '|' to separate choices.")
+
                 choice = rng.choice(parts) if parts else ""
 
                 result.append(self._expand_recursive(rng, choice))
