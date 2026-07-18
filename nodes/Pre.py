@@ -10,7 +10,5 @@ class Pre(PreBase):
     def INPUT_TYPES():
         return PreBase.INPUT_TYPES()
 
-    RETURN_TYPES = ("STRING",)
-
     def run(self, seed, pre):
         return (self.process(seed, pre),)

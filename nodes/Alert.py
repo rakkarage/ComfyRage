@@ -9,7 +9,7 @@ class Alert:
     @staticmethod
     def INPUT_TYPES():
         return {
-            "required": {"any": (AlwaysEqualProxy("*"), {})},
+            "required": {"any": (AlwaysEqualProxy("*"), {})}
         }
 
     OUTPUT_NODE = True

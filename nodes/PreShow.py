@@ -10,13 +10,9 @@ class PreShow(PreBase):
     @staticmethod
     def INPUT_TYPES():
         types = PreBase.INPUT_TYPES()
-        types["hidden"] = {
-            "unique_id": "UNIQUE_ID",
-            "extra_pnginfo": "EXTRA_PNGINFO",
-        }
+        types["hidden"] = {"unique_id": "UNIQUE_ID", "extra_pnginfo": "EXTRA_PNGINFO"}
         return types
 
-    RETURN_TYPES = ("STRING",)
     OUTPUT_NODE = True
 
     def run(self, seed, pre, unique_id=None, extra_pnginfo=None):
@@ -28,5 +24,5 @@ class PreShow(PreBase):
             inject(result, unique_id, extra_pnginfo, keep=3)
         return {
             "ui": {"processed": [result] if result else [""]},
-            "result": (result,),
+            "result": (result,)
         }
