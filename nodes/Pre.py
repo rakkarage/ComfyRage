@@ -11,4 +11,4 @@ class Pre(PreBase):
         return PreBase.INPUT_TYPES()
 
     def run(self, seed, pre):
-        return (self.process(seed, pre),)
+        return (seed, self.process(seed, pre))

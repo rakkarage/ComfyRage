@@ -24,5 +24,5 @@ class PreShow(PreBase):
             inject(result, unique_id, extra_pnginfo, keep=3)
         return {
             "ui": {"processed": [result] if result else [""]},
-            "result": (result,)
+            "result": (seed, result)
         }

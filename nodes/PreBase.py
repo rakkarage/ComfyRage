@@ -17,7 +17,8 @@ class PreBase:
         }
 
     EXAMPLE_TEXT = "({cat, {collar|}|dog, {collar|leash, ({viewer_holding_leash|})|}, {bone||}}), [[ornate_border], simple_background] // test"
-    RETURN_TYPES = ("STRING",)
+    RETURN_TYPES = ("INT", "STRING")
+    RETURN_NAMES = ("SEED", "STRING")
     FUNCTION = "run"
     CATEGORY = "rage"
 
