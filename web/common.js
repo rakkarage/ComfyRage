@@ -1,4 +1,5 @@
 // ComfyUI/custom_nodes/ComfyRage/web/common.js
+
 import { app } from "../../scripts/app.js";
 import { ComfyWidgets } from "../../scripts/widgets.js";
 

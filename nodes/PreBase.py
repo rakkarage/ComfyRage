@@ -7,11 +7,6 @@ import re
 class PreBase:
     """Shared processing logic for Pre and PreShow: strip comments, expand random choices, clean up commas, and apply emphasis."""
 
-    EXAMPLE_TEXT = "({cat, {collar|}|dog, {collar|leash, ({viewer_holding_leash|})|}, {bone||}}), [[ornate_border], simple_background] // test"
-    RETURN_TYPES = ("STRING",)
-    FUNCTION = "run"
-    CATEGORY = "rage"
-
     @staticmethod
     def INPUT_TYPES():
         return {
@@ -20,6 +15,11 @@ class PreBase:
                 "pre": ("STRING", {"multiline": True, "placeholder": PreBase.EXAMPLE_TEXT, "default": PreBase.EXAMPLE_TEXT}),
             }
         }
+
+    EXAMPLE_TEXT = "({cat, {collar|}|dog, {collar|leash, ({viewer_holding_leash|})|}, {bone||}}), [[ornate_border], simple_background] // test"
+    RETURN_TYPES = ("STRING",)
+    FUNCTION = "run"
+    CATEGORY = "rage"
 
     def remove_comments(self, string):
         return re.sub(r"/\*.*?\*/|//[^\n\r]*", "", string, flags=re.DOTALL)
